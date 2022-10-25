@@ -26,7 +26,17 @@ local defaults = {
             enabled = true
         },
         player = {
-            enabled = true
+            enabled = true,
+            size = {
+                x = -500,
+                y = -400,
+                width = 230,
+                height = 40,
+            },
+            power = {
+                enabled = true,
+                height = 8,
+            }
         }
     },
 }
@@ -77,20 +87,20 @@ function KasUnitFrames:CreateTabMenu(parent)
     TabMenu.texture:SetAllPoints(TabMenu)
     TabMenu.texture:SetColorTexture(32/255, 34/255, 37/255, 255/255)
 
-    TabMenu.logo = TabMenu:CreateTexture(nil, 'ARTWORK', nil, 2)
-    TabMenu.logo:SetSize(64, 32)
-    TabMenu.logo:SetTexture('Interface\\AddOns\\KasUnitFrames\\Media\\Texture\\logo')
-    TabMenu.logo:SetPoint('TOPLEFT', TabMenu, 'TOPLEFT', 28, -5)
+    TabMenu.logo = TabMenu:CreateFontString(nil, 'OVERLAY', 'KufLogo')
+    TabMenu.logo:SetPoint('TOP', 0, -7)
+    TabMenu.logo:SetTextColor(1, 1, 1, 1)
+    TabMenu.logo:SetText('KUF')
 
     TabMenu.divider = TabMenu:CreateTexture(nil, 'ARTWORK', nil, 3)
     TabMenu.divider:SetSize(120, 1)
     TabMenu.divider:SetTexture('Interface\\AddOns\\KasUnitFrames\\Media\\Texture\\BLACK8X8')
     TabMenu.divider:SetPoint('TOP', TabMenu.logo, 'BOTTOM', 0, -5)
 
-    TabMenu.version = TabMenu:CreateFontString(TabMenu, 'OVERLAY', 'GameTooltipText')
+    TabMenu.version = TabMenu:CreateFontString(TabMenu, 'OVERLAY', 'KufVersionText')
     TabMenu.version:SetPoint('BOTTOM', 0, 2)
     TabMenu.version:SetText('Version: 0.1')
-    TabMenu.version:SetTextColor(255/255, 255/255, 255/255, 30/255)
+    TabMenu.version:SetTextColor(255/255, 255/255, 255/255, 90/255)
 
     return TabMenu
 end
@@ -114,8 +124,7 @@ function KasUnitFrames:GenerateOptionMenus(parent)
                 testframe.texture = testframe:CreateTexture(nil, 'LOW')
                 testframe.texture:SetAllPoints(testframe)
                 testframe.texture:SetColorTexture(35/255, 255/255, 37/255, 100/255)
-                testframe.text = testframe:CreateFontString(testframe, 'OVERLAY', 'GameTooltipText')
-                testframe.text:SetFont('Interface\\AddOns\\KasUnitFrames\\Media\\Font\\Inter-UI-Bold.ttf', 16, '')
+                testframe.text = testframe:CreateFontString(testframe, 'OVERLAY', 'KufHeaderText')
                 testframe.text:SetPoint('CENTER')
                 testframe.text:SetText('NOT YET IMPLEMENTED')
                 testframe.text:SetTextColor(255/255, 255/255, 255/255, 255/255)
@@ -157,8 +166,7 @@ function KasUnitFrames:CreateTabButton(parent, text, offset)
     TabItem.background:SetAllPoints(TabItem)
     TabItem.background:SetColorTexture(0/255, 0/255, 0/255, 0/255)
 
-    TabItem.text = TabItem:CreateFontString(TabItem, 'OVERLAY', 'GameTooltipText')
-    TabItem.text:SetFont('Interface\\AddOns\\KasUnitFrames\\Media\\Font\\Inter-UI-Bold.ttf', 11, '')
+    TabItem.text = TabItem:CreateFontString(TabItem, 'OVERLAY', 'KufButtonText')
     TabItem.text:SetPoint('LEFT', 10, 0)
     TabItem.text:SetText(text)
     TabItem.text:SetJustifyH('LEFT')
@@ -192,8 +200,7 @@ function KasUnitFrames:CreateTabHeader(parent, text, offset)
     TabHeader:SetHeight(24)
     TabHeader:SetPoint('TOP', parent, 'TOP', 0, offset)
 
-    TabHeader.text = TabHeader:CreateFontString(TabHeader, 'OVERLAY', 'GameTooltipText')
-    TabHeader.text:SetFont('Interface\\AddOns\\KasUnitFrames\\Media\\Font\\Inter-UI-Bold.ttf', 14, '')
+    TabHeader.text = TabHeader:CreateFontString(TabHeader, 'OVERLAY', 'KufHeaderText')
     TabHeader.text:SetPoint('LEFT', 5, 0)
     TabHeader.text:SetText(text)
     TabHeader.text:SetJustifyH('LEFT')
@@ -214,7 +221,6 @@ function KasUnitFrames:CreateMenu()
     KufOptionsFrame:SetPropagateKeyboardInput(true)
     KufOptionsFrame:SetClampedToScreen(true)
     KufOptionsFrame:Hide()
-
     tinsert(UISpecialFrames, "KufOptionsFrame")
 
     KufOptionsFrame.background = KufOptionsFrame:CreateTexture(nil, 'LOW')

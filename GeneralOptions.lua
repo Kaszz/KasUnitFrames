@@ -11,7 +11,7 @@ function addon.CreateGeneralOptionsFrame(parent)
     OptionsFrame:SetPoint('TOPRIGHT', parent, 'TOPRIGHT')
     OptionsFrame:Hide()
 
-    enable = addon.CreateCheckBox(OptionsFrame, 'Enable', 200)
+    enable = addon.CreateCheckBox(OptionsFrame, 'Enable', addon.db.profile.general.enabled)
     enable:SetPoint('TOPLEFT', OptionsFrame, 'TOPLEFT', 10, -10)
     enable:SetScript('OnClick', function(self)
         addon.db.profile.general.enabled = self:GetChecked()

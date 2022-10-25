@@ -1,7 +1,7 @@
 <Ui xmlns='http://www.blizzard.com/wow/ui/'>
-    <FontFamily name="InterUIRegular_Normal2" virtual="true">
+    <FontFamily name="KufLogo" virtual="true">
         <Member alphabet="roman">
-            <Font font="Interface\AddOns\AstralKeys\Media\Font\Inter-UI-Regular.ttf" height="12">
+            <Font font="Interface\AddOns\KasUnitFrames\Media\Font\Roboto-Black.ttf" height="26">
             </Font>
         </Member>
         <Member alphabet="korean">
@@ -18,48 +18,82 @@
         </Member>
         <Member alphabet="russian">
             <Font font="Fonts\FRIZQT___CYR.TTF" height="12">
-                <Shadow>
-                    <Offset>
-                        <AbsDimension x="1" y="-1"/>
-                    </Offset>
-                    <Color r="0" g="0" b="0"/>
-                </Shadow>
             </Font>
         </Member>
     </FontFamily>
 
-    <FontFamily name="InterUIRegular_Normal3" virtual="true">
+    <FontFamily name="KufVersionText" virtual="true">
         <Member alphabet="roman">
-            <Font font="Interface\AddOns\AstralKeys\Media\Font\Inter-UI-Regular.ttf" height="11">
+            <Font font="Interface\AddOns\KasUnitFrames\Media\Font\Roboto-Light.ttf" height="10">
             </Font>
         </Member>
         <Member alphabet="korean">
-            <Font font="Fonts\2002.TTF" height="11">
+            <Font font="Fonts\2002.TTF" height="10">
             </Font>
         </Member>
         <Member alphabet="simplifiedchinese">
-            <Font font="Fonts\ARKai_T.ttf" height="11">
+            <Font font="Fonts\ARKai_T.ttf" height="10">
             </Font>
         </Member>
         <Member alphabet="traditionalchinese">
-            <Font font="Fonts\blei00d.TTF" height="11">
+            <Font font="Fonts\blei00d.TTF" height="10">
             </Font>
         </Member>
         <Member alphabet="russian">
-            <Font font="Fonts\FRIZQT___CYR.TTF" height="11">
-                <Shadow>
-                    <Offset>
-                        <AbsDimension x="1" y="-1"/>
-                    </Offset>
-                    <Color r="0" g="0" b="0"/>
-                </Shadow>
+            <Font font="Fonts\FRIZQT___CYR.TTF" height="10">
             </Font>
         </Member>
     </FontFamily>
 
-    <FontFamily name="InterUIRegular_Header" virtual="true">
+    <FontFamily name="KufButtonText" virtual="true">
         <Member alphabet="roman">
-            <Font font="Interface\AddOns\AstralKeys\Media\Font\Inter-UI-Bold.ttf" height="14">
+            <Font font="Interface\AddOns\KasUnitFrames\Media\Font\Roboto-Medium.ttf" height="12">
+            </Font>
+        </Member>
+        <Member alphabet="korean">
+            <Font font="Fonts\2002.TTF" height="12">
+            </Font>
+        </Member>
+        <Member alphabet="simplifiedchinese">
+            <Font font="Fonts\ARKai_T.ttf" height="12">
+            </Font>
+        </Member>
+        <Member alphabet="traditionalchinese">
+            <Font font="Fonts\blei00d.TTF" height="12">
+            </Font>
+        </Member>
+        <Member alphabet="russian">
+            <Font font="Fonts\FRIZQT___CYR.TTF" height="12">
+            </Font>
+        </Member>
+    </FontFamily>
+
+    <FontFamily name="KufCheckboxText" virtual="true">
+        <Member alphabet="roman">
+            <Font font="Interface\AddOns\KasUnitFrames\Media\Font\Roboto-Medium.ttf" height="12">
+            </Font>
+        </Member>
+        <Member alphabet="korean">
+            <Font font="Fonts\2002.TTF" height="12">
+            </Font>
+        </Member>
+        <Member alphabet="simplifiedchinese">
+            <Font font="Fonts\ARKai_T.ttf" height="12">
+            </Font>
+        </Member>
+        <Member alphabet="traditionalchinese">
+            <Font font="Fonts\blei00d.TTF" height="12">
+            </Font>
+        </Member>
+        <Member alphabet="russian">
+            <Font font="Fonts\FRIZQT___CYR.TTF" height="12">
+            </Font>
+        </Member>
+    </FontFamily>
+
+    <FontFamily name="KufHeaderText" virtual="true">
+        <Member alphabet="roman">
+            <Font font="Interface\AddOns\KasUnitFrames\Media\Font\Roboto-Bold.ttf" height="14">
             </Font>
         </Member>
         <Member alphabet="korean">
@@ -76,6 +110,36 @@
         </Member>
         <Member alphabet="russian">
             <Font font="Fonts\FRIZQT___CYR.TTF" height="14">
+            </Font>
+        </Member>
+    </FontFamily>
+
+    <FontFamily name="KufOptionTitleText" virtual="true">
+        <Member alphabet="roman">
+            <Font font="Interface\AddOns\KasUnitFrames\Media\Font\Roboto-Medium.ttf" height="12">
+            </Font>
+        </Member>
+        <Member alphabet="korean">
+            <Font font="Fonts\2002.TTF" height="12">
+            </Font>
+        </Member>
+        <Member alphabet="simplifiedchinese">
+            <Font font="Fonts\ARKai_T.ttf" height="12">
+            </Font>
+        </Member>
+        <Member alphabet="traditionalchinese">
+            <Font font="Fonts\blei00d.TTF" height="12">
+            </Font>
+        </Member>
+        <Member alphabet="russian">
+            <Font font="Fonts\FRIZQT___CYR.TTF" height="12">
+            </Font>
+        </Member>
+    </FontFamily>
+
+    <FontFamily name="KufOptionTitleValue" virtual="true">
+        <Member alphabet="roman">
+            <Font font="Interface\AddOns\KasUnitFrames\Media\Font\Roboto-Medium.ttf" height="11">
                 <Shadow>
                     <Offset>
                         <AbsDimension x="1" y="-1"/>
@@ -84,5 +148,22 @@
                 </Shadow>
             </Font>
         </Member>
+        <Member alphabet="korean">
+            <Font font="Fonts\2002.TTF" height="11">
+            </Font>
+        </Member>
+        <Member alphabet="simplifiedchinese">
+            <Font font="Fonts\ARKai_T.ttf" height="11">
+            </Font>
+        </Member>
+        <Member alphabet="traditionalchinese">
+            <Font font="Fonts\blei00d.TTF" height="11">
+            </Font>
+        </Member>
+        <Member alphabet="russian">
+            <Font font="Fonts\FRIZQT___CYR.TTF" height="11">
+            </Font>
+        </Member>
     </FontFamily>
 </Ui>
+

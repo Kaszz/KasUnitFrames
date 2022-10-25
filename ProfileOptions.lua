@@ -11,6 +11,7 @@ function addon.CreateProfileOptionsFrame(parent, profilesFrame)
 
     local button = addon.CreateButton(OptionsFrame, 'Open Profile Settings', 150)
     button:SetPoint('TOPLEFT', OptionsFrame, 'TOPLEFT', 10, -10)
+    button:SetNormalFontObject(KufHeaderText)
     button:SetScript('OnClick', function()
         parent:Hide()
         InterfaceOptionsFrame_OpenToCategory(profilesFrame)
