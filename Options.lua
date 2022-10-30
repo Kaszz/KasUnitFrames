@@ -25,6 +25,24 @@ local defaults = {
         general = {
             enabled = true
         },
+        colors = {
+            gradient = true,
+            classes = {
+                useSharedFG = false,
+                useSharedBG = true,
+                solid = {
+                    mage = {
+                        r = 255,
+                        g = 0,
+                        b = 0,
+                        a = 50
+                    }
+                },
+                gradient = {
+
+                }
+            }
+        },
         player = {
             enabled = true,
             size = {
@@ -37,7 +55,7 @@ local defaults = {
                 enabled = true,
                 height = 8,
             }
-        }
+        },
     },
 }
 
@@ -69,13 +87,13 @@ function KasUnitFrames:AddBorder(frame, level)
     border:SetWidth(frame:GetWidth() + 2)
     border:SetHeight(frame:GetHeight() + 2)
     border:SetPoint('CENTER', frame, 'CENTER')
-    border.texture = border:CreateTexture(nil, LOW)
+    border.texture = border:CreateTexture(nil, 'ARTWORK')
     border.texture:SetAllPoints(border)
     border.texture:SetColorTexture(0/255, 0/255, 0/255, 255/255)
 end
 
 function KasUnitFrames:CreateTabMenu(parent)
-    local TabMenu = CreateFrame('Frame', 'TabMenu', parent)
+    local TabMenu = CreateFrame('Frame', nil, parent)
     TabMenu:SetFrameLevel(20)
     TabMenu:SetFrameStrata('LOW')
     TabMenu:SetWidth(120)
@@ -97,7 +115,7 @@ function KasUnitFrames:CreateTabMenu(parent)
     TabMenu.divider:SetTexture('Interface\\AddOns\\KasUnitFrames\\Media\\Texture\\BLACK8X8')
     TabMenu.divider:SetPoint('TOP', TabMenu.logo, 'BOTTOM', 0, -5)
 
-    TabMenu.version = TabMenu:CreateFontString(TabMenu, 'OVERLAY', 'KufVersionText')
+    TabMenu.version = TabMenu:CreateFontString(nil, 'OVERLAY', 'KufVersionText')
     TabMenu.version:SetPoint('BOTTOM', 0, 2)
     TabMenu.version:SetText('Version: 0.1')
     TabMenu.version:SetTextColor(255/255, 255/255, 255/255, 90/255)
@@ -108,8 +126,11 @@ end
 function KasUnitFrames:GenerateOptionMenus(parent)
     for tab in ipairs(tabs) do
         if tabs[tab].type == 'button' then
+            print(tabs[tab].title)
             if tabs[tab].title == 'General' then
                 tabs[tab].menuFrame = addon.CreateGeneralOptionsFrame(parent)
+            elseif tabs[tab].title == 'Colors' then
+                tabs[tab].menuFrame = addon.CreateColorOptionsFrame(parent)
             elseif tabs[tab].title == 'Player' then
                 tabs[tab].menuFrame = addon.CreatePlayerOptionsFrame(parent)
             elseif tabs[tab].title == 'Profiles' then
@@ -121,10 +142,10 @@ function KasUnitFrames:GenerateOptionMenus(parent)
                 testframe:SetHeight(460)
                 testframe:SetWidth(599)
                 testframe:SetPoint('TOPRIGHT', parent, 'TOPRIGHT')
-                testframe.texture = testframe:CreateTexture(nil, 'LOW')
+                testframe.texture = testframe:CreateTexture(nil, 'ARTWORK')
                 testframe.texture:SetAllPoints(testframe)
                 testframe.texture:SetColorTexture(35/255, 255/255, 37/255, 100/255)
-                testframe.text = testframe:CreateFontString(testframe, 'OVERLAY', 'KufHeaderText')
+                testframe.text = testframe:CreateFontString(nil, 'OVERLAY', 'KufHeaderText')
                 testframe.text:SetPoint('CENTER')
                 testframe.text:SetText('NOT YET IMPLEMENTED')
                 testframe.text:SetTextColor(255/255, 255/255, 255/255, 255/255)
@@ -160,13 +181,13 @@ function KasUnitFrames:CreateTabButton(parent, text, offset)
     TabItem:SetHeight(24)
     TabItem:SetPoint('TOP', parent, 'TOP', 0, offset)
 
-    TabItem.background = TabItem:CreateTexture(nil, 'LOW')
+    TabItem.background = TabItem:CreateTexture(nil, 'ARTWORK')
     TabItem.background:SetWidth(110)
     TabItem.background:SetHeight(20)
     TabItem.background:SetAllPoints(TabItem)
     TabItem.background:SetColorTexture(0/255, 0/255, 0/255, 0/255)
 
-    TabItem.text = TabItem:CreateFontString(TabItem, 'OVERLAY', 'KufButtonText')
+    TabItem.text = TabItem:CreateFontString(nil, 'OVERLAY', 'KufButtonText')
     TabItem.text:SetPoint('LEFT', 10, 0)
     TabItem.text:SetText(text)
     TabItem.text:SetJustifyH('LEFT')
@@ -200,7 +221,7 @@ function KasUnitFrames:CreateTabHeader(parent, text, offset)
     TabHeader:SetHeight(24)
     TabHeader:SetPoint('TOP', parent, 'TOP', 0, offset)
 
-    TabHeader.text = TabHeader:CreateFontString(TabHeader, 'OVERLAY', 'KufHeaderText')
+    TabHeader.text = TabHeader:CreateFontString(nil, 'OVERLAY', 'KufHeaderText')
     TabHeader.text:SetPoint('LEFT', 5, 0)
     TabHeader.text:SetText(text)
     TabHeader.text:SetJustifyH('LEFT')
@@ -223,7 +244,7 @@ function KasUnitFrames:CreateMenu()
     KufOptionsFrame:Hide()
     tinsert(UISpecialFrames, "KufOptionsFrame")
 
-    KufOptionsFrame.background = KufOptionsFrame:CreateTexture(nil, 'LOW')
+    KufOptionsFrame.background = KufOptionsFrame:CreateTexture(nil, 'ARTWORK')
     KufOptionsFrame.background:SetAllPoints(KufOptionsFrame)
     KufOptionsFrame.background:SetColorTexture(47/255, 49/255, 54/255, 255/255)
     KasUnitFrames:AddBorder(KufOptionsFrame, 5)
@@ -272,9 +293,11 @@ end
 function KasUnitFrames:InitializeOptionSettings()
     addon.UpdateGeneralOptions()
     addon.UpdatePlayerOptions()
+    addon:UpdateColorPickerFrame()
 end
 
 function KasUnitFrames:OnInitialize()
+    addon.defaults = defaults
     addon.db = LibStub("AceDB-3.0"):New("KufDB", defaults, true)
     LibStub("AceConfig-3.0"):RegisterOptionsTable("KasUnitFrames_Options", profileOptions)
     LibStub("AceConfigDialog-3.0"):AddToBlizOptions("KasUnitFrames_Options", "KasUnitFrames")

@@ -46,33 +46,73 @@ local function CreateSizeAndPositioning(parent)
     sizeAndPositioning:SetPoint('TOP', parent, -5, -40)
     table.insert(subheader, sizeAndPositioning)
 
-    local widthSlider = addon.CreateBoxSlider(parent, 'WIDTH', 'player', 'size', 'width', 5, 1000)
+    local widthSlider = addon:CreateSlider(
+        parent,
+        'WIDTH',
+        5,
+        1000,
+        function()      return addon.db.profile.player.size.width end,
+        function(value) addon.db.profile.player.size.width = value end,
+        function()      addon.UpdateUnitFrame('player') end,
+        function()      return addon.db.profile.player.enabled end
+    )
     widthSlider:SetPoint('BOTTOM', sizeAndPositioning, -225, -45)
-    sliders['width'] = {
+    tinsert(sliders, {
         section = 'size',
+        value = 'width',
         slider = widthSlider
-    }
+    })
 
-    local heightSlider = addon.CreateBoxSlider(parent, 'HEIGHT', 'player', 'size', 'height', 5, 1000)
+    local heightSlider = addon:CreateSlider(
+            parent,
+            'HEIGHT',
+            5,
+            1000,
+            function()      return addon.db.profile.player.size.height end,
+            function(value) addon.db.profile.player.size.height = value end,
+            function()      addon.UpdateUnitFrame('player') end,
+            function()      return addon.db.profile.player.enabled end
+    )
     heightSlider:SetPoint('BOTTOM', sizeAndPositioning, -75, -45)
-    sliders['height'] = {
-       section = 'size',
-       slider = heightSlider
-    }
+    tinsert(sliders, {
+        section = 'size',
+        value = 'height',
+        slider = heightSlider
+    })
 
-    local xSlider = addon.CreateBoxSlider(parent, 'X', 'player', 'size', 'x', (math.floor(GetScreenWidth()/2 * -1)), math.floor(GetScreenWidth()/2))
+    local xSlider = addon:CreateSlider(
+            parent,
+            'X',
+            (math.floor(GetScreenWidth()/2 * -1)),
+            math.floor(GetScreenWidth()/2),
+            function()      return addon.db.profile.player.size.x end,
+            function(value) addon.db.profile.player.size.x = value end,
+            function()      addon.UpdateUnitFrame('player') end,
+            function()      return addon.db.profile.player.enabled end
+    )
     xSlider:SetPoint('BOTTOM', sizeAndPositioning, 75, -45)
-    sliders['x'] = {
+    tinsert(sliders, {
         section = 'size',
+        value = 'x',
         slider = xSlider
-    }
+    })
 
-    local ySlider = addon.CreateBoxSlider(parent, 'Y', 'player', 'size', 'y', (math.floor(GetScreenHeight()/2 * -1)), math.floor(GetScreenHeight()/2))
+    local ySlider = addon:CreateSlider(
+            parent,
+            'Y',
+            (math.floor(GetScreenHeight()/2 * -1)),
+            math.floor(GetScreenHeight()/2),
+            function()      return addon.db.profile.player.size.y end,
+            function(value) addon.db.profile.player.size.y = value end,
+            function()      addon.UpdateUnitFrame('player') end,
+            function()      return addon.db.profile.player.enabled end
+    )
     ySlider:SetPoint('BOTTOM', sizeAndPositioning, 225, -45)
-    sliders['y'] = {
+    tinsert(sliders, {
         section = 'size',
+        value = 'y',
         slider = ySlider
-    }
+    })
 end
 
 local function CreatePower(parent)
@@ -88,12 +128,22 @@ local function CreatePower(parent)
         addon.UpdateUnitFrame('player')
     end)
 
-    local powerHeight = addon.CreateBoxSlider(parent, 'HEIGHT', 'player', 'power', 'height', 1, addon.db.profile.player.size.height - 1)
-    powerHeight:SetPoint('BOTTOM', power, -75, -45)
-    sliders['height'] = {
+    local powerSlider = addon:CreateSlider(
+            parent,
+            'HEIGHT',
+            0,
+            addon.db.profile.player.size.height,
+            function()      return addon.db.profile.player.power.height end,
+            function(value) addon.db.profile.player.power.height = value end,
+            function()      addon.UpdateUnitFrame('player') end,
+            function()      return addon.db.profile.player.power.enabled end
+    )
+    powerSlider:SetPoint('BOTTOM', power, -75, -45)
+    tinsert(sliders, {
         section = 'power',
-        slider = powerHeight
-    }
+        value = 'height',
+        slider = powerSlider
+    })
 end
 
 function addon.CreatePlayerOptionsFrame(parent)
@@ -122,9 +172,9 @@ function addon.UpdatePlayerOptions()
     enable:SetChecked(addon.db.profile.player.enabled)
 
     for key, value in pairs(sliders) do
-        value.slider:SetNumber(addon.db.profile.player[value.section][key])
+        value.slider:SetNumber(addon.db.profile.player[value.section][value.value])
 
-        if section == 'power' and key == height then
+        if value.section == 'power' and value.value == height then
             value.slider.upper = addon.db.profile.player.size.height
         end
     end

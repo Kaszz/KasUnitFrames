@@ -4,9 +4,35 @@ local _, playerClass = UnitClass('player')
 local units = {}
 local TEXTURE = [[Interface\AddOns\SharedMedia\statusbar\Melli.tga]]
 
+local function AddBorder(frame, level)
+	local Border = CreateFrame("Frame", nil, frame, "BackdropTemplate");
+	Border:SetFrameLevel(level)
+	Border:SetPoint('CENTER')
+	Border:SetBackdrop({
+		edgeFile="Interface\\Buttons\\WHITE8x8",
+		edgeSize = 1,
+	})
+	Border:SetBackdropBorderColor(0, 0, 0)
+
+	return Border
+end
+
+local function UpdateUnitFrameColor(object, unit)
+	_, class, _ = UnitClass(unit);
+
+	if class == 'MAGE' then
+		local r = addon.db.profile.colors.classes.solid.mage.r / 255
+		local g = addon.db.profile.colors.classes.solid.mage.g / 255
+		local b = addon.db.profile.colors.classes.solid.mage.b / 255
+		local a = addon.db.profile.colors.classes.solid.mage.a / 100
+		object.Health:SetStatusBarColor(r, g, b, a)
+	end
+end
+
 function addon.UpdateUnitFrame(unit)
 	for _, v in pairs(units) do
 		if v.unit == unit then
+			v.object.Health.Border:GetBackdrop().edgeSize = addon.db.profile[unit].power.height
 			if not addon.db.profile[unit].enabled then
 				v.object.Health:SetShown(false)
 				v.object.Power:SetShown(false)
@@ -17,12 +43,16 @@ function addon.UpdateUnitFrame(unit)
 				v.object:SetHeight(addon.db.profile[unit].size.height)
 				v.object.Health:SetHeight(addon.db.profile[unit].size.height)
 				v.object:SetPoint('BOTTOMRIGHT', UIParent, 'CENTER', addon.db.profile[unit].size.x, addon.db.profile[unit].size.y)
+				v.object.Health.Border:SetSize(addon.db.profile[unit].size.width + 2, addon.db.profile[unit].size.height + 2)
 				if not addon.db.profile[unit].power.enabled then
 					v.object.Power:SetShown(false)
 					v.object.Power:SetHeight(0)
+					v.object.Power.Border:Hide()
 				else
 					v.object.Power:SetShown(true)
 					v.object.Power:SetHeight(addon.db.profile[unit].power.height)
+					v.object.Power.Border:Show()
+					v.object.Power.Border:SetSize(addon.db.profile[unit].size.width + 2, addon.db.profile[unit].power.height + 2)
 				end
 
 				if addon.db.profile[unit].size.height < addon.db.profile[unit].power.height then
@@ -30,9 +60,10 @@ function addon.UpdateUnitFrame(unit)
 
 					if unit == 'player' then
 						addon.UpdatePlayerOptions()
-
 					end
 				end
+
+				UpdateUnitFrameColor(v.object, unit)
 			end
 		end
 	end
@@ -50,7 +81,7 @@ local function UpdateHealth(self, event, unit)
 		local cur = UnitHealth(unit)
 		local max = UnitHealthMax(unit)
 		element:SetMinMaxValues(0, max)
-		element:SetValue(max - cur)
+		element:SetValue(cur)
 	end
 end
 
@@ -70,8 +101,8 @@ local function Shared(self, unit)
 
 	local Health = CreateFrame('StatusBar', nil, self)
 	Health:SetStatusBarTexture(TEXTURE)
-	Health:SetStatusBarColor(0.2, 0.2, 0.2)
-	Health:SetReverseFill(true)
+	Health:SetStatusBarColor(r, g, b, 1)
+	Health:SetReverseFill(false)
 	Health:SetFrameLevel(2)
 	Health.Override = UpdateHealth
 	Health.frequentUpdates = true
@@ -82,7 +113,10 @@ local function Shared(self, unit)
 	local HealthBG = Health:CreateTexture(nil, 'BORDER')
 	HealthBG:SetTexture(TEXTURE)
 	HealthBG:SetAllPoints(Health)
-	HealthBG:SetVertexColor(r, g, b)
+	HealthBG:SetVertexColor(0, 0, 0, 0.6)
+
+	local HealthBorder = AddBorder(self.Health, 2)
+	self.Health.Border = HealthBorder
 
 	local Power = CreateFrame('StatusBar', nil, self)
 	Power:SetPoint('BOTTOMRIGHT')
@@ -103,6 +137,9 @@ local function Shared(self, unit)
 	PowerBG:SetTexture(TEXTURE)
 	PowerBG.multiplier = 1/3
 	Power.bg = PowerBG
+
+	local PowerBorder = AddBorder(self.Power, 3)
+	self.Power.Border = PowerBorder
 
 	local RaidTarget = Health:CreateTexture(nil, 'OVERLAY')
 	RaidTarget:SetPoint('TOP', self, 0, 8)
