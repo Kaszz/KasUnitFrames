@@ -18,7 +18,46 @@ local function AddBorder(frame, level)
 end
 
 local function UpdateUnitFrameColor(object, unit)
-	_, class, _ = UnitClass(unit);
+	_, class = UnitClass(unit);
+	class = string.lower(class)
+
+	if addon.db.profile.colors.classes.useSharedFG then
+		object.Health:SetStatusBarColor(
+			addon.db.profile.colors.classes.solid.shared.fg.r / 255,
+			addon.db.profile.colors.classes.solid.shared.fg.g / 255,
+			addon.db.profile.colors.classes.solid.shared.fg.b / 255,
+			addon.db.profile.colors.classes.solid.shared.fg.a / 100
+		)
+	else
+		object.Health:SetStatusBarColor(
+			addon.db.profile.colors.classes.solid[class].r / 255,
+			addon.db.profile.colors.classes.solid[class].g / 255,
+			addon.db.profile.colors.classes.solid[class].b / 255,
+			addon.db.profile.colors.classes.solid[class].a / 100
+		)
+	end
+
+	if addon.db.profile.colors.classes.useSharedBG then
+		object.HealthBG:SetVertexColor(
+			addon.db.profile.colors.classes.solid.shared.bg.r / 255,
+			addon.db.profile.colors.classes.solid.shared.bg.g / 255,
+			addon.db.profile.colors.classes.solid.shared.bg.b / 255,
+			addon.db.profile.colors.classes.solid.shared.bg.a / 100
+		)
+		object.HealthBGOverlay:SetVertexColor(0, 0, 0, 0)
+	else
+		object.HealthBG:SetVertexColor(
+			addon.db.profile.colors.classes.solid[class].r / 255,
+			addon.db.profile.colors.classes.solid[class].g / 255,
+			addon.db.profile.colors.classes.solid[class].b / 255,
+			addon.db.profile.colors.classes.solid[class].a / 100
+		)
+		if not addon.db.profile.colors.classes.useSharedFG then
+			object.HealthBGOverlay:SetVertexColor(0, 0, 0, 0.6)
+		else
+			object.HealthBGOverlay:SetVertexColor(0, 0, 0, 0)
+		end
+	end
 
 	if class == 'MAGE' then
 		local r = addon.db.profile.colors.classes.solid.mage.r / 255
@@ -29,7 +68,7 @@ local function UpdateUnitFrameColor(object, unit)
 	end
 end
 
-function addon.UpdateUnitFrame(unit)
+function addon:UpdateUnitFrame(unit)
 	for _, v in pairs(units) do
 		if v.unit == unit then
 			v.object.Health.Border:GetBackdrop().edgeSize = addon.db.profile[unit].power.height
@@ -87,7 +126,7 @@ end
 
 local UnitSpecific = {
 	player = function(self)
-		addon.UpdateUnitFrame('player')
+		addon:UpdateUnitFrame('player')
 	end
 }
 
@@ -101,7 +140,6 @@ local function Shared(self, unit)
 
 	local Health = CreateFrame('StatusBar', nil, self)
 	Health:SetStatusBarTexture(TEXTURE)
-	Health:SetStatusBarColor(r, g, b, 1)
 	Health:SetReverseFill(false)
 	Health:SetFrameLevel(2)
 	Health.Override = UpdateHealth
@@ -110,10 +148,15 @@ local function Shared(self, unit)
 	Health:SetPoint('TOPLEFT')
 	self.Health = Health
 
-	local HealthBG = Health:CreateTexture(nil, 'BORDER')
+	local HealthBG = Health:CreateTexture(nil, 'BORDER', nil, 2)
 	HealthBG:SetTexture(TEXTURE)
 	HealthBG:SetAllPoints(Health)
-	HealthBG:SetVertexColor(0, 0, 0, 0.6)
+	self.HealthBG = HealthBG
+
+	local HealthBGOverlay = Health:CreateTexture(nil, 'BORDER', nil, 3)
+	HealthBGOverlay:SetTexture(TEXTURE)
+	HealthBGOverlay:SetAllPoints(Health)
+	self.HealthBGOverlay = HealthBGOverlay
 
 	local HealthBorder = AddBorder(self.Health, 2)
 	self.Health.Border = HealthBorder

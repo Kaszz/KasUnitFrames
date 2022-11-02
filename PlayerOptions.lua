@@ -38,7 +38,7 @@ local function ToggleOptions()
         end
     end
 
-    addon.UpdateUnitFrame('player')
+    addon:UpdateUnitFrame('player')
 end
 
 local function CreateSizeAndPositioning(parent)
@@ -53,7 +53,7 @@ local function CreateSizeAndPositioning(parent)
         1000,
         function()      return addon.db.profile.player.size.width end,
         function(value) addon.db.profile.player.size.width = value end,
-        function()      addon.UpdateUnitFrame('player') end,
+        function()      addon:UpdateUnitFrame('player') end,
         function()      return addon.db.profile.player.enabled end
     )
     widthSlider:SetPoint('BOTTOM', sizeAndPositioning, -225, -45)
@@ -70,7 +70,7 @@ local function CreateSizeAndPositioning(parent)
             1000,
             function()      return addon.db.profile.player.size.height end,
             function(value) addon.db.profile.player.size.height = value end,
-            function()      addon.UpdateUnitFrame('player') end,
+            function()      addon:UpdateUnitFrame('player') end,
             function()      return addon.db.profile.player.enabled end
     )
     heightSlider:SetPoint('BOTTOM', sizeAndPositioning, -75, -45)
@@ -87,7 +87,7 @@ local function CreateSizeAndPositioning(parent)
             math.floor(GetScreenWidth()/2),
             function()      return addon.db.profile.player.size.x end,
             function(value) addon.db.profile.player.size.x = value end,
-            function()      addon.UpdateUnitFrame('player') end,
+            function()      addon:UpdateUnitFrame('player') end,
             function()      return addon.db.profile.player.enabled end
     )
     xSlider:SetPoint('BOTTOM', sizeAndPositioning, 75, -45)
@@ -104,7 +104,7 @@ local function CreateSizeAndPositioning(parent)
             math.floor(GetScreenHeight()/2),
             function()      return addon.db.profile.player.size.y end,
             function(value) addon.db.profile.player.size.y = value end,
-            function()      addon.UpdateUnitFrame('player') end,
+            function()      addon:UpdateUnitFrame('player') end,
             function()      return addon.db.profile.player.enabled end
     )
     ySlider:SetPoint('BOTTOM', sizeAndPositioning, 225, -45)
@@ -125,7 +125,7 @@ local function CreatePower(parent)
     table.insert(checkboxes, powerEnable)
     powerEnable:SetScript('OnClick', function(self)
         addon.db.profile.player.power.enabled = self:GetChecked()
-        addon.UpdateUnitFrame('player')
+        addon:UpdateUnitFrame('player')
     end)
 
     local powerSlider = addon:CreateSlider(
@@ -135,7 +135,7 @@ local function CreatePower(parent)
             addon.db.profile.player.size.height,
             function()      return addon.db.profile.player.power.height end,
             function(value) addon.db.profile.player.power.height = value end,
-            function()      addon.UpdateUnitFrame('player') end,
+            function()      addon:UpdateUnitFrame('player') end,
             function()      return addon.db.profile.player.power.enabled end
     )
     powerSlider:SetPoint('BOTTOM', power, -75, -45)

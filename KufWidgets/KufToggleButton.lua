@@ -22,10 +22,7 @@ end
 
 local function buttonClicked(toggle, get, set)
     set(not get())
-
     UpdateButtons(toggle, get)
-
-    print('get: ' .. tostring(get()))
 end
 
 function addon:CreateToggleButton(parent, width, label, leftText, rightText, get, set)

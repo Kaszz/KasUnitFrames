@@ -1,21 +1,9 @@
 local _, addon = ...
+local colorPickers = {}
 
 local function CreateClassColors(parent)
     local classFrame = addon.CreateSubHeader(parent, 'CLASS')
     classFrame:SetPoint('TOP', parent, -5, -40)
-
-    local sharedFG = addon:CreateSingleColorPicker(
-            classFrame,
-            'SHARED FG',
-            function()      return addon.db.profile.colors.classes.solid.mage end,
-            function(value)
-                addon.db.profile.colors.classes.solid.mage = value
-                addon.UpdateUnitFrame('player')
-            end,
-            function() return addon.db.profile.colors.classes.useSharedFG  end,
-            addon.defaults.profile.colors.classes.solid.mage
-    )
-    sharedFG:SetPoint('CENTER', -50, -35)
 
     local toggleFG = addon:CreateToggleButton(
             classFrame,
@@ -26,23 +14,27 @@ local function CreateClassColors(parent)
             function()       return addon.db.profile.colors.classes.useSharedFG end,
             function(value)
                 addon.db.profile.colors.classes.useSharedFG = value
-                sharedFG.Update()
+                for _, v in pairs(colorPickers) do
+                    v.Update()
+                end
+                addon:UpdateUnitFrame('player')
             end
     )
     toggleFG:SetPoint('CENTER', -190, -50)
 
-    local sharedBG = addon:CreateSingleColorPicker(
+    local sharedFG = addon:CreateSingleColorPicker(
             classFrame,
-            'SHARED BG',
-            function()      return addon.db.profile.colors.classes.solid.mage end,
+            'SHARED FG',
+            function()      return addon.db.profile.colors.classes.solid.shared.fg end,
             function(value)
-                addon.db.profile.colors.classes.solid.mage = value
-                addon.UpdateUnitFrame('player')
+                addon.db.profile.colors.classes.solid.shared.fg = value
+                addon:UpdateUnitFrame('player')
             end,
-            function() return addon.db.profile.colors.classes.useSharedBG  end,
-            addon.defaults.profile.colors.classes.solid.mage
+            function() return addon.db.profile.colors.classes.useSharedFG end,
+            addon.defaults.profile.colors.classes.solid.shared.fg
     )
-    sharedBG:SetPoint('CENTER', 230, -36)
+    sharedFG:SetPoint('CENTER', -50, -35)
+    tinsert(colorPickers, sharedFG)
 
     local toggleBG = addon:CreateToggleButton(
             classFrame,
@@ -53,10 +45,209 @@ local function CreateClassColors(parent)
             function()       return addon.db.profile.colors.classes.useSharedBG end,
             function(value)
                 addon.db.profile.colors.classes.useSharedBG = value
-                sharedBG.Update()
+                for _, v in pairs(colorPickers) do
+                    v.Update()
+                end
+                addon:UpdateUnitFrame('player')
             end
     )
-    toggleBG:SetPoint('CENTER', 90, -50)
+    toggleBG:SetPoint('CENTER', classFrame, 'CENTER', 90, -50)
+
+    local sharedBG = addon:CreateSingleColorPicker(
+            classFrame,
+            'SHARED BG',
+            function()      return addon.db.profile.colors.classes.solid.shared.bg end,
+            function(value)
+                addon.db.profile.colors.classes.solid.shared.bg = value
+                addon:UpdateUnitFrame('player')
+            end,
+            function() return addon.db.profile.colors.classes.useSharedBG end,
+            addon.defaults.profile.colors.classes.solid.shared.bg
+    )
+    sharedBG:SetPoint('CENTER', 230, -35)
+    tinsert(colorPickers, sharedBG)
+
+    local singleMage = addon:CreateSingleColorPicker(
+            classFrame,
+            'MAGE',
+            function()      return addon.db.profile.colors.classes.solid.mage end,
+            function(value)
+                addon.db.profile.colors.classes.solid.mage = value
+                addon:UpdateUnitFrame('player')
+            end,
+            function() return not addon.db.profile.colors.classes.useSharedFG  end,
+            addon.defaults.profile.colors.classes.solid.mage
+    )
+    singleMage:SetPoint('CENTER', -230, -100)
+    tinsert(colorPickers, singleMage)
+
+    local singlePriest = addon:CreateSingleColorPicker(
+            classFrame,
+            'PRIEST',
+            function()      return addon.db.profile.colors.classes.solid.priest end,
+            function(value)
+                addon.db.profile.colors.classes.solid.priest = value
+                addon:UpdateUnitFrame('player')
+            end,
+            function() return not addon.db.profile.colors.classes.useSharedFG  end,
+            addon.defaults.profile.colors.classes.solid.priest
+    )
+    singlePriest:SetPoint('CENTER', -154, -100)
+    tinsert(colorPickers, singlePriest)
+
+    local singleMonk = addon:CreateSingleColorPicker(
+            classFrame,
+            'MONK',
+            function()      return addon.db.profile.colors.classes.solid.monk end,
+            function(value)
+                addon.db.profile.colors.classes.solid.monk = value
+                addon:UpdateUnitFrame('player')
+            end,
+            function() return not addon.db.profile.colors.classes.useSharedFG  end,
+            addon.defaults.profile.colors.classes.solid.monk
+    )
+    singleMonk:SetPoint('CENTER', -77, -100)
+    tinsert(colorPickers, singleMonk)
+
+    local singleDeathKnight = addon:CreateSingleColorPicker(
+            classFrame,
+            'DK',
+            function()      return addon.db.profile.colors.classes.solid.deathknight end,
+            function(value)
+                addon.db.profile.colors.classes.solid.deathknight = value
+                addon:UpdateUnitFrame('player')
+            end,
+            function() return not addon.db.profile.colors.classes.useSharedFG  end,
+            addon.defaults.profile.colors.classes.solid.deathknight
+    )
+    singleDeathKnight:SetPoint('CENTER', 0, -100)
+    tinsert(colorPickers, singleDeathKnight)
+
+    local singleRogue = addon:CreateSingleColorPicker(
+            classFrame,
+            'ROGUE',
+            function()      return addon.db.profile.colors.classes.solid.rogue end,
+            function(value)
+                addon.db.profile.colors.classes.solid.rogue = value
+                addon:UpdateUnitFrame('player')
+            end,
+            function() return not addon.db.profile.colors.classes.useSharedFG  end,
+            addon.defaults.profile.colors.classes.solid.rogue
+    )
+    singleRogue:SetPoint('CENTER', 77, -100)
+    tinsert(colorPickers, singleRogue)
+
+    local singleDruid = addon:CreateSingleColorPicker(
+            classFrame,
+            'DRUID',
+            function()      return addon.db.profile.colors.classes.solid.druid end,
+            function(value)
+                addon.db.profile.colors.classes.solid.druid = value
+                addon:UpdateUnitFrame('player')
+            end,
+            function() return not addon.db.profile.colors.classes.useSharedFG  end,
+            addon.defaults.profile.colors.classes.solid.druid
+    )
+    singleDruid:SetPoint('CENTER', 154, -100)
+    tinsert(colorPickers, singleDruid)
+
+    local singleHunter = addon:CreateSingleColorPicker(
+            classFrame,
+            'HUNTER',
+            function()      return addon.db.profile.colors.classes.solid.hunter end,
+            function(value)
+                addon.db.profile.colors.classes.solid.hunter = value
+                addon:UpdateUnitFrame('player')
+            end,
+            function() return not addon.db.profile.colors.classes.useSharedFG  end,
+            addon.defaults.profile.colors.classes.solid.hunter
+    )
+    singleHunter:SetPoint('CENTER', 230, -100)
+    tinsert(colorPickers, singleHunter)
+
+    local singleDemonHunter = addon:CreateSingleColorPicker(
+            classFrame,
+            'DH',
+            function()      return addon.db.profile.colors.classes.solid.demonhunter end,
+            function(value)
+                addon.db.profile.colors.classes.solid.demonhunter = value
+                addon:UpdateUnitFrame('player')
+            end,
+            function() return not addon.db.profile.colors.classes.useSharedFG  end,
+            addon.defaults.profile.colors.classes.solid.demonhunter
+    )
+    singleDemonHunter:SetPoint('CENTER', -230, -165)
+    tinsert(colorPickers, singleDemonHunter)
+
+    local singleEvoker = addon:CreateSingleColorPicker(
+            classFrame,
+            'EVOKER',
+            function()      return addon.db.profile.colors.classes.solid.evoker end,
+            function(value)
+                addon.db.profile.colors.classes.solid.evoker = value
+                addon:UpdateUnitFrame('player')
+            end,
+            function() return not addon.db.profile.colors.classes.useSharedFG  end,
+            addon.defaults.profile.colors.classes.solid.evoker
+    )
+    singleEvoker:SetPoint('CENTER', -138, -165)
+    tinsert(colorPickers, singleEvoker)
+
+    local singleWarlock = addon:CreateSingleColorPicker(
+            classFrame,
+            'WARLOCK',
+            function()      return addon.db.profile.colors.classes.solid.warlock end,
+            function(value)
+                addon.db.profile.colors.classes.solid.warlock = value
+                addon:UpdateUnitFrame('player')
+            end,
+            function() return not addon.db.profile.colors.classes.useSharedFG  end,
+            addon.defaults.profile.colors.classes.solid.warlock
+    )
+    singleWarlock:SetPoint('CENTER', -46, -165)
+    tinsert(colorPickers, singleWarlock)
+
+    local singlePaladin = addon:CreateSingleColorPicker(
+            classFrame,
+            'PALADIN',
+            function()      return addon.db.profile.colors.classes.solid.paladin end,
+            function(value)
+                addon.db.profile.colors.classes.solid.paladin = value
+                addon:UpdateUnitFrame('player')
+            end,
+            function() return not addon.db.profile.colors.classes.useSharedFG  end,
+            addon.defaults.profile.colors.classes.solid.paladin
+    )
+    singlePaladin:SetPoint('CENTER', 46, -165)
+    tinsert(colorPickers, singlePaladin)
+
+    local singleWarrior = addon:CreateSingleColorPicker(
+            classFrame,
+            'WARRIOR',
+            function()      return addon.db.profile.colors.classes.solid.warrior end,
+            function(value)
+                addon.db.profile.colors.classes.solid.warrior = value
+                addon:UpdateUnitFrame('player')
+            end,
+            function() return not addon.db.profile.colors.classes.useSharedFG  end,
+            addon.defaults.profile.colors.classes.solid.warrior
+    )
+    singleWarrior:SetPoint('CENTER', 138, -165)
+    tinsert(colorPickers, singleWarrior)
+
+    local singleShaman = addon:CreateSingleColorPicker(
+            classFrame,
+            'SHAMAN',
+            function()      return addon.db.profile.colors.classes.solid.shaman end,
+            function(value)
+                addon.db.profile.colors.classes.solid.shaman = value
+                addon:UpdateUnitFrame('player')
+            end,
+            function() return not addon.db.profile.colors.classes.useSharedFG  end,
+            addon.defaults.profile.colors.classes.solid.shaman
+    )
+    singleShaman:SetPoint('CENTER', 230, -165)
+    tinsert(colorPickers, singleShaman)
 
 
 end

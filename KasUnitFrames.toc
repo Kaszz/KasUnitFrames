@@ -23,7 +23,7 @@ KufWidgets\KufButton.lua
 KufWidgets\KufToggleButton.lua
 KufWidgets\KufColorPickerExtension.lua
 
-
+ImprovedColorPicker.lua
 KasAce.lua
 NewOptions.lua
 CommonOptions.lua
@@ -31,6 +31,7 @@ GeneralOptions.lua
 ColorOptions.lua
 ProfileOptions.lua
 PlayerOptions.lua
+TargetOptions.lua
 
 Options.lua
 

@@ -31,12 +31,98 @@ local defaults = {
                 useSharedFG = false,
                 useSharedBG = true,
                 solid = {
-                    mage = {
+                    shared = {
+                        fg = {
+                            r = 220,
+                            g = 220,
+                            b = 220,
+                            a = 100
+                        },
+                        bg = {
+                            r = 0,
+                            g = 0,
+                            b = 0,
+                            a = 60
+                        }
+                    },
+                    deathknight = {
+                        r = 196,
+                        g = 30,
+                        b = 58,
+                        a = 100
+                    },
+                    demonhunter = {
+                        r = 163,
+                        g = 48,
+                        b = 201,
+                        a = 100
+                    },
+                    druid = {
                         r = 255,
-                        g = 0,
-                        b = 0,
-                        a = 50
-                    }
+                        g = 124,
+                        b = 10,
+                        a = 100
+                    },
+                    evoker = {
+                        r = 51,
+                        g = 147,
+                        b = 127,
+                        a = 100
+                    },
+                    hunter = {
+                        r = 170,
+                        g = 211,
+                        b = 114,
+                        a = 100
+                    },
+                    mage = {
+                        r = 63,
+                        g = 199,
+                        b = 235,
+                        a = 100
+                    },
+                    monk = {
+                        r = 0,
+                        g = 255,
+                        b = 152,
+                        a = 100
+                    },
+                    paladin = {
+                        r = 244,
+                        g = 140,
+                        b = 186,
+                        a = 100
+                    },
+                    priest = {
+                        r = 255,
+                        g = 255,
+                        b = 255,
+                        a = 100
+                    },
+                    rogue = {
+                        r = 255,
+                        g = 244,
+                        b = 104,
+                        a = 100
+                    },
+                    shaman = {
+                        r = 0,
+                        g = 112,
+                        b = 221,
+                        a = 100
+                    },
+                    warlock = {
+                        r = 135,
+                        g = 136,
+                        b = 238,
+                        a = 100
+                    },
+                    warrior = {
+                        r = 198,
+                        g = 155,
+                        b = 109,
+                        a = 100
+                    },
                 },
                 gradient = {
 
@@ -93,17 +179,18 @@ function KasUnitFrames:AddBorder(frame, level)
 end
 
 function KasUnitFrames:CreateTabMenu(parent)
-    local TabMenu = CreateFrame('Frame', nil, parent)
+    local TabMenu = CreateFrame('Frame', nil, parent, 'BackdropTemplate')
     TabMenu:SetFrameLevel(20)
     TabMenu:SetFrameStrata('LOW')
     TabMenu:SetWidth(120)
-    TabMenu:SetHeight(460)
-    TabMenu:SetPoint('TOPLEFT', parent, 'TOPLEFT', 0, 0)
-    KasUnitFrames:AddBorder(TabMenu, 15)
 
-    TabMenu.texture = TabMenu:CreateTexture(nil, 'ARTWORK', nil, 1)
-    TabMenu.texture:SetAllPoints(TabMenu)
-    TabMenu.texture:SetColorTexture(32/255, 34/255, 37/255, 255/255)
+    TabMenu:SetBackdrop({
+        bgFile="Interface\\Buttons\\WHITE8x8",
+        edgeFile="Interface\\Buttons\\WHITE8x8",
+        edgeSize = 1,
+    })
+    TabMenu:SetBackdropColor(32/255, 34/255, 37/255, 255/255)
+    TabMenu:SetBackdropBorderColor(0, 0, 0)
 
     TabMenu.logo = TabMenu:CreateFontString(nil, 'OVERLAY', 'KufLogo')
     TabMenu.logo:SetPoint('TOP', 0, -7)
@@ -126,13 +213,14 @@ end
 function KasUnitFrames:GenerateOptionMenus(parent)
     for tab in ipairs(tabs) do
         if tabs[tab].type == 'button' then
-            print(tabs[tab].title)
             if tabs[tab].title == 'General' then
                 tabs[tab].menuFrame = addon.CreateGeneralOptionsFrame(parent)
             elseif tabs[tab].title == 'Colors' then
                 tabs[tab].menuFrame = addon.CreateColorOptionsFrame(parent)
             elseif tabs[tab].title == 'Player' then
                 tabs[tab].menuFrame = addon.CreatePlayerOptionsFrame(parent)
+            elseif tabs[tab].title == 'Target' then
+                tabs[tab].menuFrame = addon.CreateTargetOptionsFrame(parent)
             elseif tabs[tab].title == 'Profiles' then
                 tabs[tab].menuFrame = addon.CreateProfileOptionsFrame(parent, self.profilesFrame)
             else
@@ -177,7 +265,7 @@ function KasUnitFrames:CreateTabButton(parent, text, offset)
     local TabItem = CreateFrame('BUTTON', 'TabItem', parent)
     TabItem:SetFrameLevel(25)
     TabItem:SetFrameStrata('LOW')
-    TabItem:SetWidth(120)
+    TabItem:SetWidth(118)
     TabItem:SetHeight(24)
     TabItem:SetPoint('TOP', parent, 'TOP', 0, offset)
 
@@ -229,25 +317,28 @@ function KasUnitFrames:CreateTabHeader(parent, text, offset)
 end
 
 function KasUnitFrames:CreateMenu()
-    local KufOptionsFrame = CreateFrame('Frame', 'KufOptionsFrame', UIParent)
-    KufOptionsFrame:SetFrameLevel(10)
+    local KufOptionsFrame = CreateFrame('Frame', 'KufOptionsFrame', UIParent, "BackdropTemplate")
+    KufOptionsFrame:SetSize(720, 460)
+    KufOptionsFrame:SetResizeBounds(600, 450, 1300, 800)
+    KufOptionsFrame:SetBackdrop({
+        bgFile="Interface\\Buttons\\WHITE8x8",
+        edgeFile="Interface\\Buttons\\WHITE8x8",
+        edgeSize = 1,
+    })
     KufOptionsFrame:SetFrameStrata('LOW')
-    KufOptionsFrame:SetHeight(460)
-    KufOptionsFrame:SetWidth(720)
+    KufOptionsFrame:SetFrameLevel(10)
+    KufOptionsFrame:SetBackdropColor(47/255, 49/255, 54/255, 255/255)
+    KufOptionsFrame:SetBackdropBorderColor(0, 0, 0)
     KufOptionsFrame:SetPoint('CENTER', UIParent, 'CENTER')
-    KufOptionsFrame:SetMovable(true)
-    KufOptionsFrame:EnableMouse(true)
     KufOptionsFrame:RegisterForDrag('LeftButton')
+    KufOptionsFrame:SetMovable(true)
+    KufOptionsFrame:SetResizable(true)
+    KufOptionsFrame:EnableMouse(true)
     KufOptionsFrame:EnableKeyboard(true)
-    KufOptionsFrame:SetPropagateKeyboardInput(true)
     KufOptionsFrame:SetClampedToScreen(true)
+    KufOptionsFrame:SetPropagateKeyboardInput(true)
     KufOptionsFrame:Hide()
     tinsert(UISpecialFrames, "KufOptionsFrame")
-
-    KufOptionsFrame.background = KufOptionsFrame:CreateTexture(nil, 'ARTWORK')
-    KufOptionsFrame.background:SetAllPoints(KufOptionsFrame)
-    KufOptionsFrame.background:SetColorTexture(47/255, 49/255, 54/255, 255/255)
-    KasUnitFrames:AddBorder(KufOptionsFrame, 5)
 
     KufOptionsFrame:SetScript('OnDragStart', function(self)
         self:StartMoving()
@@ -258,6 +349,23 @@ function KasUnitFrames:CreateMenu()
     end)
 
     local TabMenu = KasUnitFrames:CreateTabMenu(KufOptionsFrame)
+    TabMenu:SetPoint('TOPRIGHT', KufOptionsFrame, 'TOPLEFT', 1, 0)
+    TabMenu:SetPoint('BOTTOMRIGHT', KufOptionsFrame, 'BOTTOMLEFT', 1, 0)
+
+    resize = CreateFrame("Button", nil, KufOptionsFrame)
+    resize:EnableMouse("true")
+    resize:SetPoint("BOTTOMRIGHT")
+    resize:SetSize(16,16)
+    resize:SetNormalTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Down")
+    resize:SetHighlightTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Highlight")
+    resize:SetPushedTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Up")
+    resize:SetScript("OnMouseDown", function(self)
+        self:GetParent():StartSizing("BOTTOMRIGHT")
+        print(self:GetParent():GetHeight())
+    end)
+    resize:SetScript("OnMouseUp", function(self)
+        self:GetParent():StopMovingOrSizing("BOTTOMRIGHT")
+    end)
 
     local offset = -43
     for tab in ipairs(tabs) do
@@ -293,7 +401,8 @@ end
 function KasUnitFrames:InitializeOptionSettings()
     addon.UpdateGeneralOptions()
     addon.UpdatePlayerOptions()
-    addon:UpdateColorPickerFrame()
+    --addon:UpdateColorPickerFrame()
+    addon:EnhanceColorPicker()
 end
 
 function KasUnitFrames:OnInitialize()

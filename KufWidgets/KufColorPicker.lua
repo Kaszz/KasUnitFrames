@@ -2,7 +2,6 @@ local _, addon = ...
 
 local function ColorCallback(self, r, g, b, a, saveChanges)
     self.color:SetColorTexture(r, g, b, a)
-    addon:UpdateColorPickerSliders(r, g, b, a)
 
     if not ColorPickerFrame:IsVisible() then
         if saveChanges then
@@ -12,8 +11,8 @@ local function ColorCallback(self, r, g, b, a, saveChanges)
                 b = b*255,
                 a = a*100
             }
-            print('set: 15')
             self.set(result)
+            ColorPickerFrame:Hide()
         end
     end
 end
@@ -33,7 +32,6 @@ local function ColorSwatch_OnClick(frame)
         ColorPickerFrame.func = function()
             local r, g, b = ColorPickerFrame:GetColorRGB()
             local a = 1 - OpacitySliderFrame:GetValue()
-            print('func')
             ColorCallback(frame, r, g, b, a, true)
         end
 
@@ -41,7 +39,6 @@ local function ColorSwatch_OnClick(frame)
         ColorPickerFrame.opacityFunc = function()
             local r, g, b = ColorPickerFrame:GetColorRGB()
             local a = 1 - OpacitySliderFrame:GetValue()
-            print('opacityFunc')
             ColorCallback(frame, r, g, b, a, true)
         end
 
@@ -49,7 +46,6 @@ local function ColorSwatch_OnClick(frame)
         ColorPickerFrame.opacity = 1 - (a or 0)
         ColorPickerFrame:SetColorRGB(r, g, b)
         ColorPickerFrame.cancelFunc = function()
-            print('cancelFunc')
             ColorCallback(frame, r, g, b, a, false)
         end
 
