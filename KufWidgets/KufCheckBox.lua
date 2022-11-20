@@ -1,44 +1,101 @@
 local _, addon = ...
 
-function addon.CreateCheckBox(parent, label, enabled)
-    local CheckBox = CreateFrame('CheckButton', nil, parent, "BackdropTemplate")
-    CheckBox:SetSize(20, 20)
-    CheckBox:SetNormalFontObject(KufCheckboxText)
-    CheckBox:SetPushedTextOffset(1, -1)
-    CheckBox:SetChecked(enabled)
+--function addon:CreateCheckBox(parent, label, value, enabled, vertical)
+--    local CheckBox = CreateFrame('CheckButton', nil, parent, "BackdropTemplate")
+--    CheckBox:SetSize(20, 20)
+--    CheckBox:SetNormalFontObject(KufCheckboxText)
+--    CheckBox:SetPushedTextOffset(1, -1)
+--    CheckBox:SetChecked(value)
+--    CheckBox.type = 'checkbox'
+--    CheckBox.isEnabled = enabled
+--
+--    CheckBox.box = CheckBox:CreateTexture('PUSHED_TEXTURE_BOX', 'BACKGROUND')
+--    CheckBox.box:SetSize(14, 14)
+--    CheckBox.box:SetPoint('LEFT', CheckBox, 'LEFT', -2, 3)
+--    CheckBox.box:SetTexture('Interface\\AddOns\\KasUnitFrames\\Media\\box2.tga')
+--    CheckBox.box:SetVertexColor(190/255, 190/255, 190/255, 255/255)
+--
+--    CheckBox.check = CheckBox:CreateTexture('PUSHEDTEXTURE', 'BACKGROUND')
+--    CheckBox.check:SetSize(14, 14)
+--    CheckBox.check:SetPoint('CENTER', CheckBox, -5, 3)
+--    CheckBox.check:SetTexture('Interface\\AddOns\\KasUnitFrames\\Media\\Texture\\baseline-done-small@2x.tga')
+--    CheckBox.check:SetVertexColor(190/255, 190/255, 190/255, 255/255)
+--    CheckBox:SetCheckedTexture(CheckBox.check)
+--
+--    CheckBox.text = CheckBox:CreateFontString(nil, 'OVERLAY', 'KufOptionTitleText')
+--    CheckBox.text:SetText(label)
+--    CheckBox.text:SetTextColor(1, 1, 1, 1)
+--
+--    if (vertical) then
+--        CheckBox.text:SetPoint('TOP', CheckBox.box, 0, 12)
+--    else
+--        CheckBox.text:SetPoint('LEFT', CheckBox.box, 'RIGHT', 5, 3)
+--    end
+--
+--    CheckBox:SetScript('OnEnter', function(self)
+--        if CheckBox:GetChecked() then
+--            self.box:SetVertexColor(1, 1, 1, 1)
+--            self.check:SetVertexColor(1, 1, 1, 1)
+--        end
+--    end)
+--
+--    CheckBox:SetScript('OnLeave', function(self)
+--        self.box:SetVertexColor(190/255, 190/255, 190/255, 255/255)
+--        self.check:SetVertexColor(190/255, 190/255, 190/255, 255/255)
+--    end)
+--
+--    return CheckBox
+--end
 
-    CheckBox.box = CheckBox:CreateTexture('PUSHED_TEXTURE_BOX', 'BACKGROUND')
-    CheckBox.box:SetSize(14, 14)
-    CheckBox.box:SetPoint('LEFT', CheckBox, 'LEFT', -2, 0)
-    CheckBox.box:SetTexture('Interface\\AddOns\\KasUnitFrames\\Media\\box2.tga')
-    CheckBox.box:SetVertexColor(190/255, 190/255, 190/255, 255/255)
+function addon:CreateCheckBox(parent, label, value, enabled, vertical)
+    local frame = CreateFrame('Frame', nil, parent)
+    frame:SetSize(70, 16)
+    frame.type = 'checkbox'
+    frame.isEnabled = enabled
 
-    CheckBox.check = CheckBox:CreateTexture('PUSHEDTEXTURE', 'BACKGROUND')
-    CheckBox.check:SetSize(14, 14)
-    CheckBox.check:SetPoint('CENTER', CheckBox, -5, 0)
-    CheckBox.check:SetTexture('Interface\\AddOns\\KasUnitFrames\\Media\\Texture\\baseline-done-small@2x.tga')
-    CheckBox.check:SetVertexColor(190/255, 190/255, 190/255, 255/255)
-    CheckBox:SetCheckedTexture(CheckBox.check)
+    frame.text = frame:CreateFontString(nil, 'OVERLAY', 'KufOptionTitleText')
+    frame.text:SetText(label)
+    frame.text:SetTextColor(1, 1, 1, 1)
+    frame.text:SetPoint('CENTER')
 
-    CheckBox.text = CheckBox:CreateFontString(nil, 'OVERLAY', 'KufOptionTitleText')
-    CheckBox.text:SetText(label)
-    CheckBox.text:SetTextColor(1, 1, 1, 1)
-    CheckBox.text:SetPoint('LEFT', CheckBox.box, 'RIGHT', 5, 0)
+    frame.CheckBox = CreateFrame('CheckButton', nil, frame, "BackdropTemplate")
+    frame.CheckBox:SetSize(20, 20)
+    frame.CheckBox:SetNormalFontObject(KufCheckboxText)
+    frame.CheckBox:SetPushedTextOffset(1, -1)
+    frame.CheckBox:SetChecked(value)
 
-    CheckBox:SetScript('OnEnter', function(self)
-        if CheckBox:GetChecked() then
+    frame.CheckBox.box = frame.CheckBox:CreateTexture('PUSHED_TEXTURE_BOX', 'BACKGROUND')
+    frame.CheckBox.box:SetSize(14, 14)
+    frame.CheckBox.box:SetPoint('LEFT', frame.CheckBox, 'LEFT', -2, 3)
+    frame.CheckBox.box:SetTexture('Interface\\AddOns\\KasUnitFrames\\Media\\box2.tga')
+    frame.CheckBox.box:SetVertexColor(190/255, 190/255, 190/255, 255/255)
+
+    frame.CheckBox.check = frame.CheckBox:CreateTexture('PUSHEDTEXTURE', 'BACKGROUND')
+    frame.CheckBox.check:SetSize(14, 14)
+    frame.CheckBox.check:SetPoint('CENTER', frame.CheckBox, -5, 3)
+    frame.CheckBox.check:SetTexture('Interface\\AddOns\\KasUnitFrames\\Media\\Texture\\baseline-done-small@2x.tga')
+    frame.CheckBox.check:SetVertexColor(190/255, 190/255, 190/255, 255/255)
+    frame.CheckBox:SetCheckedTexture(frame.CheckBox.check)
+
+    frame.CheckBox:SetScript('OnEnter', function(self)
+        if frame.CheckBox:GetChecked() then
             self.box:SetVertexColor(1, 1, 1, 1)
             self.check:SetVertexColor(1, 1, 1, 1)
         end
     end)
 
-    CheckBox:SetScript('OnLeave', function(self)
+    frame.CheckBox:SetScript('OnLeave', function(self)
         self.box:SetVertexColor(190/255, 190/255, 190/255, 255/255)
         self.check:SetVertexColor(190/255, 190/255, 190/255, 255/255)
     end)
 
-    return CheckBox
+    frame.GetChecked = function(self)
+        return self.CheckBox:GetChecked()
+    end
+
+    return frame
 end
+
 
 local function UpdateAnimation(index, label, colors, parent)
     local CheckBoxText = ''
@@ -51,7 +108,7 @@ local function UpdateAnimation(index, label, colors, parent)
     parent.text:SetText(CheckBoxText)
 end
 
-function addon.CreateCheckBoxGradient(parent, label, colors, enabled)
+function addon:CreateCheckBoxGradient(parent, label, colors, enabled)
     local CheckBox = CreateFrame('CheckButton', nil, parent, "BackdropTemplate")
     CheckBox:SetSize(20, 20)
     CheckBox:SetNormalFontObject(KufCheckboxText)
@@ -185,21 +242,4 @@ function addon.CreateCheckBoxGradient(parent, label, colors, enabled)
     end)
 
     return CheckBox
-end
-
-function addon.CreateSubHeader(parent, text)
-    local SubHeader = CreateFrame('Frame', nil, parent)
-    SubHeader:SetSize(570, 24)
-
-    SubHeader.text = SubHeader:CreateFontString(nil, 'OVERLAY', 'KufHeaderText')
-    SubHeader.text:SetPoint('LEFT', 0, -1)
-    SubHeader.text:SetText(text)
-    SubHeader.text:SetTextColor(255/255, 255/255, 255/255, 255/255)
-
-    SubHeader.stroke = SubHeader:CreateTexture(nil, 'ARTWORK', nil, 1)
-    SubHeader.stroke:SetSize(570 - SubHeader.text:GetStringWidth() + 5, 1)
-    SubHeader.stroke:SetColorTexture(1, 1, 1, 1)
-    SubHeader.stroke:SetPoint('LEFT', SubHeader.text, 'RIGHT', 5, 0)
-
-    return SubHeader
 end

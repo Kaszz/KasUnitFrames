@@ -1,13 +1,13 @@
 local _, addon = ...
 
 local function selectButton(button)
-    button:SetBackdropColor(47/255, 49/255, 54/255)
-    button.text:SetTextColor(215/255, 215/255, 215/255)
+    button:SetBackdropColor(254/255, 231/255, 92/255)
+    button.text:SetTextColor(47/255, 49/255, 54/255)
 end
 
 local function deselectButton(button)
-    button:SetBackdropColor(170/255, 170/255, 170/255)
-    button.text:SetTextColor(47/255, 49/255, 54/255)
+    button:SetBackdropColor(47/255, 49/255, 54/255)
+    button.text:SetTextColor(170/255, 170/255, 170/255)
 end
 
 local function UpdateButtons(toggle, get)
@@ -30,7 +30,7 @@ function addon:CreateToggleButton(parent, width, label, leftText, rightText, get
     toggle:SetSize(width, 22)
     toggle:SetBackdrop({
         edgeFile="Interface\\Buttons\\WHITE8x8",
-        edgeSize = 2,
+        edgeSize = 1,
     })
     toggle:SetBackdropBorderColor(170/255, 170/255, 170/255)
 

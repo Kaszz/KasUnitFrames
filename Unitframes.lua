@@ -1,6 +1,5 @@
 local _, addon = ...
 local oUF = addon.oUF
-local _, playerClass = UnitClass('player')
 local units = {}
 local TEXTURE = [[Interface\AddOns\SharedMedia\statusbar\Melli.tga]]
 
@@ -17,94 +16,144 @@ local function AddBorder(frame, level)
 	return Border
 end
 
+local function SetFrameColor(frame, fg, bg, fadeBg)
+	frame.Health:SetStatusBarColor(
+		fg.r / 255,
+		fg.g / 255,
+		fg.b / 255,
+		fg.a / 100
+	)
+
+	frame.HealthBG:SetVertexColor(
+		bg.r / 255,
+		bg.g / 255,
+		bg.b / 255,
+		bg.a / 100
+	)
+
+	if (fadeBg) then
+		frame.HealthBGOverlay:SetVertexColor(0, 0, 0, 0.6)
+	else
+		frame.HealthBGOverlay:SetVertexColor(0, 0, 0, 0)
+	end
+end
+
 local function UpdateUnitFrameColor(object, unit)
-	_, class = UnitClass(unit);
-	class = string.lower(class)
+	if (UnitExists(unit)) then
 
-	if addon.db.profile.colors.classes.useSharedFG then
-		object.Health:SetStatusBarColor(
-			addon.db.profile.colors.classes.solid.shared.fg.r / 255,
-			addon.db.profile.colors.classes.solid.shared.fg.g / 255,
-			addon.db.profile.colors.classes.solid.shared.fg.b / 255,
-			addon.db.profile.colors.classes.solid.shared.fg.a / 100
-		)
-	else
-		object.Health:SetStatusBarColor(
-			addon.db.profile.colors.classes.solid[class].r / 255,
-			addon.db.profile.colors.classes.solid[class].g / 255,
-			addon.db.profile.colors.classes.solid[class].b / 255,
-			addon.db.profile.colors.classes.solid[class].a / 100
-		)
-	end
+		local _, class = UnitClass(unit);
+		local isPlayer = UnitIsPlayer(unit)
+		local reaction = UnitReaction('player', unit);
 
-	if addon.db.profile.colors.classes.useSharedBG then
-		object.HealthBG:SetVertexColor(
-			addon.db.profile.colors.classes.solid.shared.bg.r / 255,
-			addon.db.profile.colors.classes.solid.shared.bg.g / 255,
-			addon.db.profile.colors.classes.solid.shared.bg.b / 255,
-			addon.db.profile.colors.classes.solid.shared.bg.a / 100
-		)
-		object.HealthBGOverlay:SetVertexColor(0, 0, 0, 0)
-	else
-		object.HealthBG:SetVertexColor(
-			addon.db.profile.colors.classes.solid[class].r / 255,
-			addon.db.profile.colors.classes.solid[class].g / 255,
-			addon.db.profile.colors.classes.solid[class].b / 255,
-			addon.db.profile.colors.classes.solid[class].a / 100
-		)
-		if not addon.db.profile.colors.classes.useSharedFG then
-			object.HealthBGOverlay:SetVertexColor(0, 0, 0, 0.6)
-		else
-			object.HealthBGOverlay:SetVertexColor(0, 0, 0, 0)
+		local fg, bg
+		local fadeBg = false
+
+		if (isPlayer) then
+			class = string.lower(class)
+
+			if addon.db.profile.colors.classes.useSharedFG then
+				fg = addon.db.profile.colors.classes.solid.shared.fg
+			else
+				fg = addon.db.profile.colors.classes.solid[class]
+			end
+
+			if addon.db.profile.colors.classes.useSharedBG then
+				bg = addon.db.profile.colors.classes.solid.shared.bg
+			else
+				bg = addon.db.profile.colors.classes.solid[class]
+			end
+			if (not addon.db.profile.colors.classes.useSharedBG and not addon.db.profile.colors.classes.useSharedFG) then
+				fadeBg = true
+			end
+		elseif (reaction > 4) then -- friendly
+			if addon.db.profile.colors.classes.useSharedFG then
+				fg = addon.db.profile.colors.classes.solid.shared.fg
+			else
+				fg = addon.db.profile.colors.npc.friendly
+			end
+
+			if addon.db.profile.colors.classes.useSharedBG then
+				bg = addon.db.profile.colors.classes.solid.shared.bg
+			else
+				bg = addon.db.profile.colors.npc.friendly
+			end
+			if (not addon.db.profile.colors.classes.useSharedBG and not addon.db.profile.colors.classes.useSharedFG) then
+				fadeBg = true
+			end
+		elseif (reaction == 4) then -- neutral
+			if addon.db.profile.colors.classes.useSharedFG then
+				fg = addon.db.profile.colors.classes.solid.shared.fg
+			else
+				fg = addon.db.profile.colors.npc.neutral
+			end
+
+			if addon.db.profile.colors.classes.useSharedBG then
+				bg = addon.db.profile.colors.classes.solid.shared.bg
+			else
+				bg = addon.db.profile.colors.npc.neutral
+			end
+			if (not addon.db.profile.colors.classes.useSharedBG and not addon.db.profile.colors.classes.useSharedFG) then
+				fadeBg = true
+			end
+		elseif (reaction < 4) then -- hostile
+			if addon.db.profile.colors.classes.useSharedFG then
+				fg = addon.db.profile.colors.classes.solid.shared.fg
+			else
+				fg = addon.db.profile.colors.npc.hostile
+			end
+
+			if addon.db.profile.colors.classes.useSharedBG then
+				bg = addon.db.profile.colors.classes.solid.shared.bg
+			else
+				bg = addon.db.profile.colors.npc.hostile
+			end
+			if (not addon.db.profile.colors.classes.useSharedBG and not addon.db.profile.colors.classes.useSharedFG) then
+				fadeBg = true
+			end
 		end
-	end
-
-	if class == 'MAGE' then
-		local r = addon.db.profile.colors.classes.solid.mage.r / 255
-		local g = addon.db.profile.colors.classes.solid.mage.g / 255
-		local b = addon.db.profile.colors.classes.solid.mage.b / 255
-		local a = addon.db.profile.colors.classes.solid.mage.a / 100
-		object.Health:SetStatusBarColor(r, g, b, a)
+		SetFrameColor(object, fg, bg, fadeBg)
 	end
 end
 
 function addon:UpdateUnitFrame(unit)
-	for _, v in pairs(units) do
-		if v.unit == unit then
-			v.object.Health.Border:GetBackdrop().edgeSize = addon.db.profile[unit].power.height
+	for k, v in pairs(units) do
+		if k == unit then
+			v.Health.Border:GetBackdrop().edgeSize = addon.db.profile[unit].power.height
 			if not addon.db.profile[unit].enabled then
-				v.object.Health:SetShown(false)
-				v.object.Power:SetShown(false)
-				v.object.Power:SetHeight(0)
+				v.Health:SetShown(false)
+				v.Power:SetShown(false)
+				v.Power:SetHeight(0)
 			else
-				v.object.Health:SetShown(true)
-				v.object:SetWidth(addon.db.profile[unit].size.width)
-				v.object:SetHeight(addon.db.profile[unit].size.height)
-				v.object.Health:SetHeight(addon.db.profile[unit].size.height)
-				v.object:SetPoint('BOTTOMRIGHT', UIParent, 'CENTER', addon.db.profile[unit].size.x, addon.db.profile[unit].size.y)
-				v.object.Health.Border:SetSize(addon.db.profile[unit].size.width + 2, addon.db.profile[unit].size.height + 2)
+				v.Health:SetShown(true)
+				v:SetWidth(addon.db.profile[unit].size.width)
+				v:SetHeight(addon.db.profile[unit].size.height)
+				v.Health:SetHeight(addon.db.profile[unit].size.height)
+				v:SetPoint('BOTTOMRIGHT', UIParent, 'CENTER', addon.db.profile[unit].size.x, addon.db.profile[unit].size.y)
+				v.Health.Border:SetSize(addon.db.profile[unit].size.width + 2, addon.db.profile[unit].size.height + 2)
 				if not addon.db.profile[unit].power.enabled then
-					v.object.Power:SetShown(false)
-					v.object.Power:SetHeight(0)
-					v.object.Power.Border:Hide()
+					v.Power:SetShown(false)
+					v.Power:SetHeight(0)
+					v.Power.Border:Hide()
 				else
-					v.object.Power:SetShown(true)
-					v.object.Power:SetHeight(addon.db.profile[unit].power.height)
-					v.object.Power.Border:Show()
-					v.object.Power.Border:SetSize(addon.db.profile[unit].size.width + 2, addon.db.profile[unit].power.height + 2)
+					v.Power:SetShown(true)
+					v.Power:SetHeight(addon.db.profile[unit].power.height)
+					v.Power.Border:Show()
+					v.Power.Border:SetSize(addon.db.profile[unit].size.width + 2, addon.db.profile[unit].power.height + 2)
 				end
 
 				if addon.db.profile[unit].size.height < addon.db.profile[unit].power.height then
 					addon.db.profile[unit].power.height = addon.db.profile[unit].size.height
-
-					if unit == 'player' then
-						addon.UpdatePlayerOptions()
-					end
 				end
 
-				UpdateUnitFrameColor(v.object, unit)
+				UpdateUnitFrameColor(v, unit)
 			end
 		end
+	end
+end
+
+function addon:UpdateAllUnitFrame()
+	for k, _ in pairs(units) do
+		addon:UpdateUnitFrame(k)
 	end
 end
 
@@ -122,17 +171,14 @@ local function UpdateHealth(self, event, unit)
 		element:SetMinMaxValues(0, max)
 		element:SetValue(cur)
 	end
-end
 
-local UnitSpecific = {
-	player = function(self)
-		addon:UpdateUnitFrame('player')
+	if (unit ~= 'player') then
+		UpdateUnitFrameColor(units[unit], unit)
 	end
-}
+end
 
 local function Shared(self, unit)
 	unit = unit:match('^(.-)%d+') or unit
-	r, g, b = GetClassColor(playerClass)
 
 	self:RegisterForClicks('AnyUp')
 	self:SetScript('OnEnter', UnitFrame_OnEnter)
@@ -189,15 +235,15 @@ local function Shared(self, unit)
 	RaidTarget:SetSize(16, 16)
 	self.RaidTargetIndicator = RaidTarget
 
-	tinsert(units, {unit = unit, object = self})
+	--tinsert(units, {unit = unit, object = self})
+	units[unit] = self
 
-	if(UnitSpecific[unit]) then
-		return UnitSpecific[unit](self)
-	end
+	addon:UpdateUnitFrame(unit)
 end
 
 oUF:RegisterStyle('KUF', Shared)
 oUF:Factory(function(self)
 	self:SetActiveStyle('KUF')
-	self:Spawn('player')
+	--self:Spawn('player')
+	self:Spawn('target')
 end)

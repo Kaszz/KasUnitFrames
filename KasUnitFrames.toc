@@ -17,21 +17,21 @@ Libs\AceDBOptions-3.0\AceDBOptions-3.0.xml
 Libs\oUF\oUF.xml
 
 fonts.xml
-KufWidgets\KufColorPicker.lua
+KufWidgets\KufHeader.lua
 KufWidgets\KufSlider.lua
 KufWidgets\KufButton.lua
+KufWidgets\KufCheckBox.lua
+KufWidgets\KufColorPicker.lua
 KufWidgets\KufToggleButton.lua
+KufWidgets\KufSectionHeader.lua
 KufWidgets\KufColorPickerExtension.lua
 
 ImprovedColorPicker.lua
-KasAce.lua
-NewOptions.lua
-CommonOptions.lua
 GeneralOptions.lua
 ColorOptions.lua
 ProfileOptions.lua
 PlayerOptions.lua
-TargetOptions.lua
+IndividualUnitOptions.lua
 
 Options.lua
 

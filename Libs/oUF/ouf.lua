@@ -21,7 +21,7 @@ local activeElements = {}
 
 local PetBattleFrameHider = CreateFrame('Frame', (global or parent) .. '_PetBattleFrameHider', UIParent, 'SecureHandlerStateTemplate')
 PetBattleFrameHider:SetAllPoints()
-PetBattleFrameHider:SetFrameStrata('LOW')
+PetBattleFrameHider:SetFrameStrata('DIALOG')
 RegisterStateDriver(PetBattleFrameHider, 'visibility', '[petbattle] hide; show')
 
 -- updating of "invalid" units.

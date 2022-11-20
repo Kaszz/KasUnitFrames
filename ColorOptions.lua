@@ -2,7 +2,7 @@ local _, addon = ...
 local colorPickers = {}
 
 local function CreateClassColors(parent)
-    local classFrame = addon.CreateSubHeader(parent, 'CLASS')
+    local classFrame = addon:CreateHeader(parent, 'CLASS')
     classFrame:SetPoint('TOP', parent, -5, -40)
 
     local toggleFG = addon:CreateToggleButton(
@@ -17,7 +17,7 @@ local function CreateClassColors(parent)
                 for _, v in pairs(colorPickers) do
                     v.Update()
                 end
-                addon:UpdateUnitFrame('player')
+                addon:UpdateAllUnitFrame()
             end
     )
     toggleFG:SetPoint('CENTER', -190, -50)
@@ -28,7 +28,7 @@ local function CreateClassColors(parent)
             function()      return addon.db.profile.colors.classes.solid.shared.fg end,
             function(value)
                 addon.db.profile.colors.classes.solid.shared.fg = value
-                addon:UpdateUnitFrame('player')
+                addon:UpdateAllUnitFrame()
             end,
             function() return addon.db.profile.colors.classes.useSharedFG end,
             addon.defaults.profile.colors.classes.solid.shared.fg
@@ -48,7 +48,7 @@ local function CreateClassColors(parent)
                 for _, v in pairs(colorPickers) do
                     v.Update()
                 end
-                addon:UpdateUnitFrame('player')
+                addon:UpdateAllUnitFrame()
             end
     )
     toggleBG:SetPoint('CENTER', classFrame, 'CENTER', 90, -50)
@@ -59,7 +59,7 @@ local function CreateClassColors(parent)
             function()      return addon.db.profile.colors.classes.solid.shared.bg end,
             function(value)
                 addon.db.profile.colors.classes.solid.shared.bg = value
-                addon:UpdateUnitFrame('player')
+                addon:UpdateAllUnitFrame()
             end,
             function() return addon.db.profile.colors.classes.useSharedBG end,
             addon.defaults.profile.colors.classes.solid.shared.bg
@@ -73,7 +73,7 @@ local function CreateClassColors(parent)
             function()      return addon.db.profile.colors.classes.solid.mage end,
             function(value)
                 addon.db.profile.colors.classes.solid.mage = value
-                addon:UpdateUnitFrame('player')
+                addon:UpdateAllUnitFrame()
             end,
             function() return not addon.db.profile.colors.classes.useSharedFG  end,
             addon.defaults.profile.colors.classes.solid.mage
@@ -87,7 +87,7 @@ local function CreateClassColors(parent)
             function()      return addon.db.profile.colors.classes.solid.priest end,
             function(value)
                 addon.db.profile.colors.classes.solid.priest = value
-                addon:UpdateUnitFrame('player')
+                addon:UpdateAllUnitFrame()
             end,
             function() return not addon.db.profile.colors.classes.useSharedFG  end,
             addon.defaults.profile.colors.classes.solid.priest
@@ -101,7 +101,7 @@ local function CreateClassColors(parent)
             function()      return addon.db.profile.colors.classes.solid.monk end,
             function(value)
                 addon.db.profile.colors.classes.solid.monk = value
-                addon:UpdateUnitFrame('player')
+                addon:UpdateAllUnitFrame()
             end,
             function() return not addon.db.profile.colors.classes.useSharedFG  end,
             addon.defaults.profile.colors.classes.solid.monk
@@ -115,7 +115,7 @@ local function CreateClassColors(parent)
             function()      return addon.db.profile.colors.classes.solid.deathknight end,
             function(value)
                 addon.db.profile.colors.classes.solid.deathknight = value
-                addon:UpdateUnitFrame('player')
+                addon:UpdateAllUnitFrame()
             end,
             function() return not addon.db.profile.colors.classes.useSharedFG  end,
             addon.defaults.profile.colors.classes.solid.deathknight
@@ -129,7 +129,7 @@ local function CreateClassColors(parent)
             function()      return addon.db.profile.colors.classes.solid.rogue end,
             function(value)
                 addon.db.profile.colors.classes.solid.rogue = value
-                addon:UpdateUnitFrame('player')
+                addon:UpdateAllUnitFrame()
             end,
             function() return not addon.db.profile.colors.classes.useSharedFG  end,
             addon.defaults.profile.colors.classes.solid.rogue
@@ -143,7 +143,7 @@ local function CreateClassColors(parent)
             function()      return addon.db.profile.colors.classes.solid.druid end,
             function(value)
                 addon.db.profile.colors.classes.solid.druid = value
-                addon:UpdateUnitFrame('player')
+                addon:UpdateAllUnitFrame()
             end,
             function() return not addon.db.profile.colors.classes.useSharedFG  end,
             addon.defaults.profile.colors.classes.solid.druid
@@ -157,7 +157,7 @@ local function CreateClassColors(parent)
             function()      return addon.db.profile.colors.classes.solid.hunter end,
             function(value)
                 addon.db.profile.colors.classes.solid.hunter = value
-                addon:UpdateUnitFrame('player')
+                addon:UpdateAllUnitFrame()
             end,
             function() return not addon.db.profile.colors.classes.useSharedFG  end,
             addon.defaults.profile.colors.classes.solid.hunter
@@ -171,7 +171,7 @@ local function CreateClassColors(parent)
             function()      return addon.db.profile.colors.classes.solid.demonhunter end,
             function(value)
                 addon.db.profile.colors.classes.solid.demonhunter = value
-                addon:UpdateUnitFrame('player')
+                addon:UpdateAllUnitFrame()
             end,
             function() return not addon.db.profile.colors.classes.useSharedFG  end,
             addon.defaults.profile.colors.classes.solid.demonhunter
@@ -185,7 +185,7 @@ local function CreateClassColors(parent)
             function()      return addon.db.profile.colors.classes.solid.evoker end,
             function(value)
                 addon.db.profile.colors.classes.solid.evoker = value
-                addon:UpdateUnitFrame('player')
+                addon:UpdateAllUnitFrame()
             end,
             function() return not addon.db.profile.colors.classes.useSharedFG  end,
             addon.defaults.profile.colors.classes.solid.evoker
@@ -199,7 +199,7 @@ local function CreateClassColors(parent)
             function()      return addon.db.profile.colors.classes.solid.warlock end,
             function(value)
                 addon.db.profile.colors.classes.solid.warlock = value
-                addon:UpdateUnitFrame('player')
+                addon:UpdateAllUnitFrame()
             end,
             function() return not addon.db.profile.colors.classes.useSharedFG  end,
             addon.defaults.profile.colors.classes.solid.warlock
@@ -213,7 +213,7 @@ local function CreateClassColors(parent)
             function()      return addon.db.profile.colors.classes.solid.paladin end,
             function(value)
                 addon.db.profile.colors.classes.solid.paladin = value
-                addon:UpdateUnitFrame('player')
+                addon:UpdateAllUnitFrame()
             end,
             function() return not addon.db.profile.colors.classes.useSharedFG  end,
             addon.defaults.profile.colors.classes.solid.paladin
@@ -227,7 +227,7 @@ local function CreateClassColors(parent)
             function()      return addon.db.profile.colors.classes.solid.warrior end,
             function(value)
                 addon.db.profile.colors.classes.solid.warrior = value
-                addon:UpdateUnitFrame('player')
+                addon:UpdateAllUnitFrame()
             end,
             function() return not addon.db.profile.colors.classes.useSharedFG  end,
             addon.defaults.profile.colors.classes.solid.warrior
@@ -241,7 +241,7 @@ local function CreateClassColors(parent)
             function()      return addon.db.profile.colors.classes.solid.shaman end,
             function(value)
                 addon.db.profile.colors.classes.solid.shaman = value
-                addon:UpdateUnitFrame('player')
+                addon:UpdateAllUnitFrame()
             end,
             function() return not addon.db.profile.colors.classes.useSharedFG  end,
             addon.defaults.profile.colors.classes.solid.shaman
@@ -255,7 +255,7 @@ end
 function addon.CreateColorOptionsFrame(parent)
     local OptionsFrame = CreateFrame('Frame', 'ColorOptions', parent)
     OptionsFrame:SetFrameLevel(30)
-    OptionsFrame:SetFrameStrata('LOW')
+    OptionsFrame:SetFrameStrata('DIALOG')
     OptionsFrame:SetHeight(460)
     OptionsFrame:SetWidth(599)
     OptionsFrame:SetPoint('TOPRIGHT', parent, 'TOPRIGHT')
@@ -315,7 +315,7 @@ function addon.CreateColorOptionsFrame(parent)
 
     local grad = 'GRADIENT'
 
-    local gradientEnabled = addon.CreateCheckBoxGradient(OptionsFrame, grad, colors, addon.db.profile.colors.gradient)
+    local gradientEnabled = addon:CreateCheckBoxGradient(OptionsFrame, grad, colors, addon.db.profile.colors.gradient)
     gradientEnabled:SetPoint('TOPLEFT', OptionsFrame, 'TOPLEFT', 10, -10)
     gradientEnabled:SetScript('OnClick', function(self)
         addon.db.profile.colors.gradient = self:GetChecked()

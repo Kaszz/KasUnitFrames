@@ -42,7 +42,7 @@ local function ToggleOptions()
 end
 
 local function CreateSizeAndPositioning(parent)
-    local sizeAndPositioning = addon.CreateSubHeader(parent, 'SIZE & POSITIONING')
+    local sizeAndPositioning = addon:CreateHeader(parent, 'SIZE & POSITIONING')
     sizeAndPositioning:SetPoint('TOP', parent, -5, -40)
     table.insert(subheader, sizeAndPositioning)
 
@@ -91,11 +91,11 @@ local function CreateSizeAndPositioning(parent)
             function()      return addon.db.profile.player.enabled end
     )
     xSlider:SetPoint('BOTTOM', sizeAndPositioning, 75, -45)
-    tinsert(sliders, {
-        section = 'size',
-        value = 'x',
-        slider = xSlider
-    })
+    --tinsert(sliders, {
+    --    section = 'size',
+    --    value = 'x',
+    --    slider = xSlider
+    --})
 
     local ySlider = addon:CreateSlider(
             parent,
@@ -116,11 +116,17 @@ local function CreateSizeAndPositioning(parent)
 end
 
 local function CreatePower(parent)
-    local power = addon.CreateSubHeader(parent, 'POWER')
+    local power = addon:CreateHeader(parent, 'POWER')
     power:SetPoint('TOP', parent, -5, -125)
     table.insert(subheader, power)
 
-    local powerEnable = addon.CreateCheckBox(parent, 'ENABLE', addon.db.profile.player.power.enabled)
+    local powerEnable = addon:CreateCheckBox(
+        parent,
+        'ENABLE',
+        function() return addon.db.profile.player.power.enabled end,
+        function() return true end,
+        true
+    )
     powerEnable:SetPoint('TOPLEFT', parent, 'TOPLEFT', 46, -160)
     table.insert(checkboxes, powerEnable)
     powerEnable:SetScript('OnClick', function(self)
@@ -149,13 +155,19 @@ end
 function addon.CreatePlayerOptionsFrame(parent)
     local OptionsFrame = CreateFrame('Frame', 'GeneralOptions', parent)
     OptionsFrame:SetFrameLevel(30)
-    OptionsFrame:SetFrameStrata('LOW')
+    OptionsFrame:SetFrameStrata('DIALOG')
     OptionsFrame:SetHeight(460)
     OptionsFrame:SetWidth(599)
     OptionsFrame:SetPoint('TOPRIGHT', parent, 'TOPRIGHT')
     OptionsFrame:Hide()
 
-    enable = addon.CreateCheckBox(OptionsFrame, 'ENABLE', addon.db.profile.player.enabled)
+    enable = addon:CreateCheckBox(
+        OptionsFrame,
+        'ENABLE',
+        function() return addon.db.profile.player.enabled end,
+        function() return true end,
+        false
+    )
     enable:SetPoint('TOPLEFT', OptionsFrame, 'TOPLEFT', 10, -10)
     enable:SetScript('OnClick', function(self)
         addon.db.profile.player.enabled = self:GetChecked()
@@ -166,18 +178,4 @@ function addon.CreatePlayerOptionsFrame(parent)
     CreatePower(OptionsFrame)
 
     return OptionsFrame
-end
-
-function addon.UpdatePlayerOptions()
-    enable:SetChecked(addon.db.profile.player.enabled)
-
-    for key, value in pairs(sliders) do
-        value.slider:SetNumber(addon.db.profile.player[value.section][value.value])
-
-        if value.section == 'power' and value.value == height then
-            value.slider.upper = addon.db.profile.player.size.height
-        end
-    end
-
-    ToggleOptions()
 end

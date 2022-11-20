@@ -91,7 +91,7 @@ end
 
 function addon:CreateSlider(parent, text, lower, upper, get, set, update, enabled)
     local BoxSlider = CreateFrame("EditBox", nil, parent, "BackdropTemplate")
-    BoxSlider:SetSize(48,16)
+    BoxSlider:SetSize(70, 16)
     BoxSlider:SetAutoFocus(false)
     BoxSlider:SetNumber(get())
     BoxSlider:SetFontObject(KufOptionTitleValue)
@@ -105,6 +105,7 @@ function addon:CreateSlider(parent, text, lower, upper, get, set, update, enable
     BoxSlider.set = set
     BoxSlider.update = update
     BoxSlider.isEnabled = enabled
+    BoxSlider.type = 'slider'
 
     BoxSlider:SetBackdrop({
         bgFile = 'Interface/ChatFrame/ChatFrameBackground',
@@ -115,7 +116,7 @@ function addon:CreateSlider(parent, text, lower, upper, get, set, update, enable
     BoxSlider:SetBackdropBorderColor(255/255, 255/255, 255/255, 0)
 
     BoxSlider.header = BoxSlider:CreateFontString(nil, 'OVERLAY', 'KufOptionTitleText')
-    BoxSlider.header:SetPoint('TOPLEFT', 0, 12)
+    BoxSlider.header:SetPoint('TOP', 0, 12)
     BoxSlider.header:SetText(text)
     BoxSlider.header:SetTextColor(255/255, 255/255, 255/255, 255/255)
 

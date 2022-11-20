@@ -127,9 +127,42 @@ local defaults = {
                 gradient = {
 
                 }
+            },
+            npc = {
+                hostile = {
+                    r = 141,
+                    g = 46,
+                    b = 45,
+                    a = 100
+                },
+                neutral = {
+                    r = 154,
+                    g = 140,
+                    b = 65,
+                    a = 100
+                },
+                friendly = {
+                    r = 52,
+                    g = 126,
+                    b = 55,
+                    a = 100
+                },
             }
         },
         player = {
+            enabled = true,
+            size = {
+                x = -500,
+                y = -400,
+                width = 230,
+                height = 40,
+            },
+            power = {
+                enabled = true,
+                height = 8,
+            }
+        },
+        target = {
             enabled = true,
             size = {
                 x = -500,
@@ -169,7 +202,7 @@ local SelectedTab = 'General'
 function KasUnitFrames:AddBorder(frame, level)
     local border = CreateFrame('Frame', 'border', frame)
     border:SetFrameLevel(level)
-    border:SetFrameStrata('LOW')
+    border:SetFrameStrata('DIALOG')
     border:SetWidth(frame:GetWidth() + 2)
     border:SetHeight(frame:GetHeight() + 2)
     border:SetPoint('CENTER', frame, 'CENTER')
@@ -181,7 +214,7 @@ end
 function KasUnitFrames:CreateTabMenu(parent)
     local TabMenu = CreateFrame('Frame', nil, parent, 'BackdropTemplate')
     TabMenu:SetFrameLevel(20)
-    TabMenu:SetFrameStrata('LOW')
+    TabMenu:SetFrameStrata('DIALOG')
     TabMenu:SetWidth(120)
 
     TabMenu:SetBackdrop({
@@ -203,7 +236,7 @@ function KasUnitFrames:CreateTabMenu(parent)
     TabMenu.divider:SetPoint('TOP', TabMenu.logo, 'BOTTOM', 0, -5)
 
     TabMenu.version = TabMenu:CreateFontString(nil, 'OVERLAY', 'KufVersionText')
-    TabMenu.version:SetPoint('BOTTOM', 0, 2)
+    TabMenu.version:SetPoint('BOTTOM', 0, 3)
     TabMenu.version:SetText('Version: 0.1')
     TabMenu.version:SetTextColor(255/255, 255/255, 255/255, 90/255)
 
@@ -217,16 +250,16 @@ function KasUnitFrames:GenerateOptionMenus(parent)
                 tabs[tab].menuFrame = addon.CreateGeneralOptionsFrame(parent)
             elseif tabs[tab].title == 'Colors' then
                 tabs[tab].menuFrame = addon.CreateColorOptionsFrame(parent)
-            elseif tabs[tab].title == 'Player' then
-                tabs[tab].menuFrame = addon.CreatePlayerOptionsFrame(parent)
+            --elseif tabs[tab].title == 'Player' then
+            --    tabs[tab].menuFrame = addon.CreateIndividualUnitOptionsFrame(parent, 'player')
             elseif tabs[tab].title == 'Target' then
-                tabs[tab].menuFrame = addon.CreateTargetOptionsFrame(parent)
+                tabs[tab].menuFrame = addon.CreateIndividualUnitOptionsFrame(parent, 'target')
             elseif tabs[tab].title == 'Profiles' then
                 tabs[tab].menuFrame = addon.CreateProfileOptionsFrame(parent, self.profilesFrame)
             else
                 local testframe = CreateFrame('Frame', 'testframe', parent)
                 testframe:SetFrameLevel(30)
-                testframe:SetFrameStrata('LOW')
+                testframe:SetFrameStrata('DIALOG')
                 testframe:SetHeight(460)
                 testframe:SetWidth(599)
                 testframe:SetPoint('TOPRIGHT', parent, 'TOPRIGHT')
@@ -264,7 +297,7 @@ end
 function KasUnitFrames:CreateTabButton(parent, text, offset)
     local TabItem = CreateFrame('BUTTON', 'TabItem', parent)
     TabItem:SetFrameLevel(25)
-    TabItem:SetFrameStrata('LOW')
+    TabItem:SetFrameStrata('DIALOG')
     TabItem:SetWidth(118)
     TabItem:SetHeight(24)
     TabItem:SetPoint('TOP', parent, 'TOP', 0, offset)
@@ -304,7 +337,7 @@ end
 function KasUnitFrames:CreateTabHeader(parent, text, offset)
     local TabHeader = CreateFrame('BUTTON', 'TabItem', parent)
     TabHeader:SetFrameLevel(25)
-    TabHeader:SetFrameStrata('LOW')
+    TabHeader:SetFrameStrata('DIALOG')
     TabHeader:SetWidth(120)
     TabHeader:SetHeight(24)
     TabHeader:SetPoint('TOP', parent, 'TOP', 0, offset)
@@ -319,13 +352,13 @@ end
 function KasUnitFrames:CreateMenu()
     local KufOptionsFrame = CreateFrame('Frame', 'KufOptionsFrame', UIParent, "BackdropTemplate")
     KufOptionsFrame:SetSize(720, 460)
-    KufOptionsFrame:SetResizeBounds(600, 450, 1300, 800)
+    KufOptionsFrame:SetResizeBounds(400, 440, 1300, 800)
     KufOptionsFrame:SetBackdrop({
         bgFile="Interface\\Buttons\\WHITE8x8",
         edgeFile="Interface\\Buttons\\WHITE8x8",
         edgeSize = 1,
     })
-    KufOptionsFrame:SetFrameStrata('LOW')
+    KufOptionsFrame:SetFrameStrata('DIALOG')
     KufOptionsFrame:SetFrameLevel(10)
     KufOptionsFrame:SetBackdropColor(47/255, 49/255, 54/255, 255/255)
     KufOptionsFrame:SetBackdropBorderColor(0, 0, 0)
@@ -354,14 +387,21 @@ function KasUnitFrames:CreateMenu()
 
     resize = CreateFrame("Button", nil, KufOptionsFrame)
     resize:EnableMouse("true")
-    resize:SetPoint("BOTTOMRIGHT")
-    resize:SetSize(16,16)
-    resize:SetNormalTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Down")
-    resize:SetHighlightTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Highlight")
-    resize:SetPushedTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Up")
+    resize:SetPoint("BOTTOMRIGHT", 12, -12)
+    resize:SetSize(32,32)
+    resize:SetNormalTexture("Interface\\AddOns\\KasUnitFrames\\Media\\Texture\\resize.tga")
+    resize:SetAlpha(0.2)
+
+    resize:SetScript("OnEnter", function()
+        resize:SetAlpha(0.6)
+    end)
+
+    resize:SetScript("OnLeave", function()
+        resize:SetAlpha(0.2)
+    end)
+
     resize:SetScript("OnMouseDown", function(self)
         self:GetParent():StartSizing("BOTTOMRIGHT")
-        print(self:GetParent():GetHeight())
     end)
     resize:SetScript("OnMouseUp", function(self)
         self:GetParent():StopMovingOrSizing("BOTTOMRIGHT")
@@ -382,10 +422,11 @@ function KasUnitFrames:CreateMenu()
     KasUnitFrames:GenerateOptionMenus(KufOptionsFrame)
     KasUnitFrames:UpdateTabs()
 
-    local closeButton = CreateFrame('BUTTON', 'CloseButton', KufOptionsFrame)
+    local closeButton = CreateFrame('BUTTON', nil, KufOptionsFrame)
     closeButton:SetNormalTexture('Interface\\AddOns\\KasUnitFrames\\Media\\Texture\\baseline-close-24px@2x.tga')
     closeButton:SetSize(12, 12)
     closeButton:GetNormalTexture():SetVertexColor(255/255, 255/255, 255/255, 255/255)
+    closeButton:SetFrameLevel(50)
     closeButton:SetScript('OnClick', function()
         KufOptionsFrame:Hide()
     end)
@@ -400,8 +441,6 @@ end
 
 function KasUnitFrames:InitializeOptionSettings()
     addon.UpdateGeneralOptions()
-    addon.UpdatePlayerOptions()
-    --addon:UpdateColorPickerFrame()
     addon:EnhanceColorPicker()
 end
 
@@ -409,12 +448,11 @@ function KasUnitFrames:OnInitialize()
     addon.defaults = defaults
     addon.db = LibStub("AceDB-3.0"):New("KufDB", defaults, true)
     LibStub("AceConfig-3.0"):RegisterOptionsTable("KasUnitFrames_Options", profileOptions)
-    LibStub("AceConfigDialog-3.0"):AddToBlizOptions("KasUnitFrames_Options", "KasUnitFrames")
+    --LibStub("AceConfigDialog-3.0"):AddToBlizOptions("KasUnitFrames_Options", "KasUnitFrames")
 
-
-    local profiles = LibStub("AceDBOptions-3.0"):GetOptionsTable(addon.db)
-    LibStub("AceConfig-3.0"):RegisterOptionsTable("KasUnitFrames_Profiles", profiles)
-    self.profilesFrame = LibStub("AceConfigDialog-3.0"):AddToBlizOptions("KasUnitFrames_Profiles", "Profiles", "KasUnitFrames")
+    --local profiles = LibStub("AceDBOptions-3.0"):GetOptionsTable(addon.db)
+    --LibStub("AceConfig-3.0"):RegisterOptionsTable("KasUnitFrames_Profiles", profiles)
+    --self.profilesFrame = LibStub("AceConfigDialog-3.0"):AddToBlizOptions("KasUnitFrames_Profiles", "Profiles", "KasUnitFrames")
 
     self:RegisterChatCommand("kuf", "SlashCommand")
 

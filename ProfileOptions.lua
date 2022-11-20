@@ -3,7 +3,7 @@ local _, addon = ...
 function addon.CreateProfileOptionsFrame(parent, profilesFrame)
     local OptionsFrame = CreateFrame('Frame', 'GeneralOptions', parent)
     OptionsFrame:SetFrameLevel(30)
-    OptionsFrame:SetFrameStrata('LOW')
+    OptionsFrame:SetFrameStrata('DIALOG')
     OptionsFrame:SetHeight(460)
     OptionsFrame:SetWidth(599)
     OptionsFrame:SetPoint('TOPRIGHT', parent, 'TOPRIGHT')
