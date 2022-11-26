@@ -50,7 +50,7 @@ local function OnMouseDown(self, button)
 
         elseif button == 'RightButton' then
             self:SetBackdropColor(41/255, 43/255, 47/255, 1)
-            self:SetBackdropBorderColor(255/255, 255/255, 255/255, 1)
+            self:SetBackdropBorderColor(0, 0, 0, 1)
             self:Enable()
         end
     end
@@ -79,7 +79,7 @@ end
 local function OnEnterPressed(self)
     self:Disable()
     self:SetBackdropColor(41/255, 43/255, 47/255, 0)
-    self:SetBackdropBorderColor(255/255, 255/255, 255/255, 0)
+    self:SetBackdropBorderColor(0, 0, 0, 0)
     local value = self:GetNumber()
     if value < self.lower then value = self.lower end
     if value > self.upper then value = self.upper end
@@ -113,10 +113,10 @@ function addon:CreateSlider(parent, text, lower, upper, get, set, update, enable
         tile = true, edgeSize = 1, tileSize = 5,
     })
     BoxSlider:SetBackdropColor(41/255, 43/255, 47/255, 0)
-    BoxSlider:SetBackdropBorderColor(255/255, 255/255, 255/255, 0)
+    BoxSlider:SetBackdropBorderColor(0, 0, 0, 0)
 
     BoxSlider.header = BoxSlider:CreateFontString(nil, 'OVERLAY', 'KufOptionTitleText')
-    BoxSlider.header:SetPoint('TOP', 0, 12)
+    BoxSlider.header:SetPoint('TOP', 0, 14)
     BoxSlider.header:SetText(text)
     BoxSlider.header:SetTextColor(255/255, 255/255, 255/255, 255/255)
 

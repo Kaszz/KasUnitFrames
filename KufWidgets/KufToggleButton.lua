@@ -35,7 +35,7 @@ function addon:CreateToggleButton(parent, width, label, leftText, rightText, get
     toggle:SetBackdropBorderColor(170/255, 170/255, 170/255)
 
     toggle.label =  toggle:CreateFontString(nil, 'OVERLAY', 'KufOptionTitleText')
-    toggle.label:SetPoint("CENTER", 0, 22)
+    toggle.label:SetPoint("CENTER", 0, 24)
     toggle.label:SetText(label)
 
     local leftButton = CreateFrame("Button", nil, parent, "BackdropTemplate")

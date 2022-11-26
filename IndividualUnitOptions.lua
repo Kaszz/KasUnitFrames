@@ -26,13 +26,13 @@ local function ToggleOptions(unit, parent)
             else
                 v:SetAlpha(0.3)
             end
+        end
 
-            if (addon.db.profile[unit].enabled) then
+        if (v.type == 'customtext') then
+            if (v.isEnabled()) then
                 v:SetAlpha(1)
-                v.enabled = addon.db.profile[unit].enabled
             else
                 v:SetAlpha(0.3)
-                v.enabled = addon.db.profile[unit].enabled
             end
         end
     end
@@ -79,12 +79,12 @@ end
 
 local function RefreshOnUpdate(self, elapsed)
     timeElapsed = timeElapsed + elapsed
-    if timeElapsed > 0.05 then
+    if timeElapsed > 0.01 then
 
         local width = self:GetParent():GetWidth() -18
 
         for _, v in pairs(self.elements) do
-            if (v.type == 'header') then
+            if (v.type == 'header' or v.type == 'customtext') then
                 v.UpdateWidth(width)
             end
         end
@@ -99,14 +99,14 @@ local function CreateEnable(unit, parent)
     local enable = addon:CreateCheckBox(
         parent,
         'ENABLE',
-        addon.db.profile[unit].enabled,
+        true,
         function() return true end,
-        false
+        function() return addon.db.profile[unit].enabled end,
+        function(value) addon.db.profile[unit].enabled = value end,
+        function()
+            ToggleOptions(unit, parent)
+        end
     )
-    enable:SetScript('OnClick', function(self)
-        addon.db.profile[unit].enabled = self:GetChecked()
-        ToggleOptions(unit, parent)
-    end)
     tinsert(parent.elements, enable)
 end
 
@@ -182,16 +182,16 @@ local function CreatePower(unit, parent)
     tinsert(parent.elements, powerHeader)
 
     local powerEnable = addon:CreateCheckBox(
-        parent,
-        'ENABLE',
-        addon.db.profile[unit].power.enabled,
-        function() return true end,
-        true
+            parent,
+            'ENABLE',
+            false,
+            function() return addon.db.profile[unit].enabled end,
+            function() return addon.db.profile[unit].power.enabled end,
+            function(value) addon.db.profile[unit].power.enabled = value end,
+            function()
+                ToggleOptions(unit, parent)
+            end
     )
-    powerEnable:SetScript('OnClick', function(self)
-        addon.db.profile[unit].power.enabled = self:GetChecked()
-        ToggleOptions(unit, parent)
-    end)
     tinsert(parent.elements, powerEnable)
 
     local powerSlider = addon:CreateSlider(
@@ -212,6 +212,61 @@ local function CreatePower(unit, parent)
     )
     powerSlider:SetPoint('TOPLEFT', parent, 0, 0)
     tinsert(parent.elements, powerSlider)
+end
+
+local function CreateTexts(unit, parent)
+    local textsHeader = addon:CreateSectionHeader(
+            parent,
+            'TEXTS',
+            parent:GetParent():GetWidth(),
+            function() return addon.db.profile[unit].enabled end
+    )
+    tinsert(parent.elements, textsHeader)
+
+    local customTextElement = addon:CreateCustomTextElement(
+            parent,
+            function() return addon.db.profile[unit].enabled end,
+            unit
+    )
+    tinsert(parent.elements, customTextElement)
+
+    --local textEnable = addon:CreateCheckBox(
+    --        parent,
+    --        'ENABLE',
+    --        false,
+    --        function() return addon.db.profile[unit].enabled end,
+    --        function() return true end,
+    --        function(value) end,
+    --        function()
+    --            ToggleOptions(unit, parent)
+    --        end
+    --)
+    --tinsert(parent.elements, textEnable)
+    --
+    --local text = addon:CreateEditBox(
+    --        parent,
+    --        150,
+    --        'TEXT',
+    --        22,
+    --        function() return addon.db.profile[unit].enabled end,
+    --        function() return true end,
+    --        function()
+    --            -- save to db
+    --            -- update the fontstring on frame
+    --        end
+    --)
+    --tinsert(parent.elements, text)
+    --
+    --local deleteButton = addon:CreateButton(
+    --        parent,
+    --        'DELETE',
+    --        150,
+    --        function()
+    --            print(customTextElement.tabs.selected)
+    --            customTextElement.delete(unit, customTextElement.tabs)
+    --        end
+    --)
+    --tinsert(parent.elements, deleteButton)
 end
 
 local function CreateScrollFrame(parent)
@@ -265,6 +320,7 @@ function addon.CreateIndividualUnitOptionsFrame(parent, unit)
     CreateEnable(unit, frame:GetScrollChild())
     CreateSizeAndPositioning(unit, frame:GetScrollChild())
     CreatePower(unit, frame:GetScrollChild())
+    CreateTexts(unit, frame:GetScrollChild())
 
     ToggleOptions(unit, frame:GetScrollChild())
 

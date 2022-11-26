@@ -20,6 +20,7 @@ fonts.xml
 KufWidgets\KufHeader.lua
 KufWidgets\KufSlider.lua
 KufWidgets\KufButton.lua
+KufWidgets\KufEditBox.lua
 KufWidgets\KufCheckBox.lua
 KufWidgets\KufColorPicker.lua
 KufWidgets\KufToggleButton.lua
@@ -30,7 +31,8 @@ ImprovedColorPicker.lua
 GeneralOptions.lua
 ColorOptions.lua
 ProfileOptions.lua
-PlayerOptions.lua
+KufWidgets\KufCustomText.lua
+
 IndividualUnitOptions.lua
 
 Options.lua

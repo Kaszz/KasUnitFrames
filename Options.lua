@@ -160,6 +160,8 @@ local defaults = {
             power = {
                 enabled = true,
                 height = 8,
+            },
+            texts = {
             }
         },
         target = {
@@ -173,6 +175,8 @@ local defaults = {
             power = {
                 enabled = true,
                 height = 8,
+            },
+            texts = {
             }
         },
     },
@@ -250,8 +254,8 @@ function KasUnitFrames:GenerateOptionMenus(parent)
                 tabs[tab].menuFrame = addon.CreateGeneralOptionsFrame(parent)
             elseif tabs[tab].title == 'Colors' then
                 tabs[tab].menuFrame = addon.CreateColorOptionsFrame(parent)
-            --elseif tabs[tab].title == 'Player' then
-            --    tabs[tab].menuFrame = addon.CreateIndividualUnitOptionsFrame(parent, 'player')
+            elseif tabs[tab].title == 'Player' then
+                tabs[tab].menuFrame = addon.CreateIndividualUnitOptionsFrame(parent, 'player')
             elseif tabs[tab].title == 'Target' then
                 tabs[tab].menuFrame = addon.CreateIndividualUnitOptionsFrame(parent, 'target')
             elseif tabs[tab].title == 'Profiles' then
@@ -318,12 +322,14 @@ function KasUnitFrames:CreateTabButton(parent, text, offset)
         SelectedTab = self.text:GetText()
         KasUnitFrames:UpdateTabs()
     end)
+
     TabItem:SetScript('OnEnter', function(self)
         if SelectedTab ~= text then
             self.text:SetTextColor(255/255, 255/255, 255/255, 255/255)
             self.background:SetColorTexture(60/255, 63/255, 69/255, 255/255)
         end
     end)
+
     TabItem:SetScript('OnLeave', function(self)
         if SelectedTab ~= text then
             self.text:SetTextColor(190/255, 190/255, 190/255, 255/255)
@@ -448,11 +454,10 @@ function KasUnitFrames:OnInitialize()
     addon.defaults = defaults
     addon.db = LibStub("AceDB-3.0"):New("KufDB", defaults, true)
     LibStub("AceConfig-3.0"):RegisterOptionsTable("KasUnitFrames_Options", profileOptions)
-    --LibStub("AceConfigDialog-3.0"):AddToBlizOptions("KasUnitFrames_Options", "KasUnitFrames")
 
-    --local profiles = LibStub("AceDBOptions-3.0"):GetOptionsTable(addon.db)
-    --LibStub("AceConfig-3.0"):RegisterOptionsTable("KasUnitFrames_Profiles", profiles)
-    --self.profilesFrame = LibStub("AceConfigDialog-3.0"):AddToBlizOptions("KasUnitFrames_Profiles", "Profiles", "KasUnitFrames")
+    local profiles = LibStub("AceDBOptions-3.0"):GetOptionsTable(addon.db)
+    LibStub("AceConfig-3.0"):RegisterOptionsTable("KasUnitFrames_Profiles", profiles)
+    self.profilesFrame = LibStub("AceConfigDialog-3.0"):AddToBlizOptions("KasUnitFrames_Profiles", "KasUnitFrames")
 
     self:RegisterChatCommand("kuf", "SlashCommand")
 

@@ -1,53 +1,6 @@
 local _, addon = ...
 
---function addon:CreateCheckBox(parent, label, value, enabled, vertical)
---    local CheckBox = CreateFrame('CheckButton', nil, parent, "BackdropTemplate")
---    CheckBox:SetSize(20, 20)
---    CheckBox:SetNormalFontObject(KufCheckboxText)
---    CheckBox:SetPushedTextOffset(1, -1)
---    CheckBox:SetChecked(value)
---    CheckBox.type = 'checkbox'
---    CheckBox.isEnabled = enabled
---
---    CheckBox.box = CheckBox:CreateTexture('PUSHED_TEXTURE_BOX', 'BACKGROUND')
---    CheckBox.box:SetSize(14, 14)
---    CheckBox.box:SetPoint('LEFT', CheckBox, 'LEFT', -2, 3)
---    CheckBox.box:SetTexture('Interface\\AddOns\\KasUnitFrames\\Media\\box2.tga')
---    CheckBox.box:SetVertexColor(190/255, 190/255, 190/255, 255/255)
---
---    CheckBox.check = CheckBox:CreateTexture('PUSHEDTEXTURE', 'BACKGROUND')
---    CheckBox.check:SetSize(14, 14)
---    CheckBox.check:SetPoint('CENTER', CheckBox, -5, 3)
---    CheckBox.check:SetTexture('Interface\\AddOns\\KasUnitFrames\\Media\\Texture\\baseline-done-small@2x.tga')
---    CheckBox.check:SetVertexColor(190/255, 190/255, 190/255, 255/255)
---    CheckBox:SetCheckedTexture(CheckBox.check)
---
---    CheckBox.text = CheckBox:CreateFontString(nil, 'OVERLAY', 'KufOptionTitleText')
---    CheckBox.text:SetText(label)
---    CheckBox.text:SetTextColor(1, 1, 1, 1)
---
---    if (vertical) then
---        CheckBox.text:SetPoint('TOP', CheckBox.box, 0, 12)
---    else
---        CheckBox.text:SetPoint('LEFT', CheckBox.box, 'RIGHT', 5, 3)
---    end
---
---    CheckBox:SetScript('OnEnter', function(self)
---        if CheckBox:GetChecked() then
---            self.box:SetVertexColor(1, 1, 1, 1)
---            self.check:SetVertexColor(1, 1, 1, 1)
---        end
---    end)
---
---    CheckBox:SetScript('OnLeave', function(self)
---        self.box:SetVertexColor(190/255, 190/255, 190/255, 255/255)
---        self.check:SetVertexColor(190/255, 190/255, 190/255, 255/255)
---    end)
---
---    return CheckBox
---end
-
-function addon:CreateCheckBox(parent, label, value, enabled, vertical)
+function addon:CreateCheckBox(parent, label, vertical, enabled, get, set, update)
     local frame = CreateFrame('Frame', nil, parent)
     frame:SetSize(70, 16)
     frame.type = 'checkbox'
@@ -56,42 +9,57 @@ function addon:CreateCheckBox(parent, label, value, enabled, vertical)
     frame.text = frame:CreateFontString(nil, 'OVERLAY', 'KufOptionTitleText')
     frame.text:SetText(label)
     frame.text:SetTextColor(1, 1, 1, 1)
-    frame.text:SetPoint('CENTER')
+    frame.textBackdrop = CreateFrame('Button', nil, frame)
+    frame.textBackdrop:SetSize(frame.text:GetStringWidth(), 14)
 
-    frame.CheckBox = CreateFrame('CheckButton', nil, frame, "BackdropTemplate")
-    frame.CheckBox:SetSize(20, 20)
-    frame.CheckBox:SetNormalFontObject(KufCheckboxText)
-    frame.CheckBox:SetPushedTextOffset(1, -1)
-    frame.CheckBox:SetChecked(value)
+    if (vertical) then
+        frame:SetWidth(16)
+        frame.text:SetPoint('LEFT', 18, 0)
+        frame.textBackdrop:SetPoint('LEFT', 18, 0)
+    else
+        frame.text:SetPoint('TOP', 0, 14)
+        frame.textBackdrop:SetPoint('TOP', 0, 15)
+    end
 
-    frame.CheckBox.box = frame.CheckBox:CreateTexture('PUSHED_TEXTURE_BOX', 'BACKGROUND')
-    frame.CheckBox.box:SetSize(14, 14)
-    frame.CheckBox.box:SetPoint('LEFT', frame.CheckBox, 'LEFT', -2, 3)
-    frame.CheckBox.box:SetTexture('Interface\\AddOns\\KasUnitFrames\\Media\\box2.tga')
-    frame.CheckBox.box:SetVertexColor(190/255, 190/255, 190/255, 255/255)
+    if (frame.text:GetStringWidth() > 70) then
+        frame:SetWidth(frame.text:GetStringWidth())
+    end
 
-    frame.CheckBox.check = frame.CheckBox:CreateTexture('PUSHEDTEXTURE', 'BACKGROUND')
-    frame.CheckBox.check:SetSize(14, 14)
-    frame.CheckBox.check:SetPoint('CENTER', frame.CheckBox, -5, 3)
-    frame.CheckBox.check:SetTexture('Interface\\AddOns\\KasUnitFrames\\Media\\Texture\\baseline-done-small@2x.tga')
-    frame.CheckBox.check:SetVertexColor(190/255, 190/255, 190/255, 255/255)
-    frame.CheckBox:SetCheckedTexture(frame.CheckBox.check)
+    frame.checkBox = CreateFrame('CheckButton', nil, frame, "BackdropTemplate")
+    frame.checkBox:SetSize(16, 16)
+    frame.checkBox:SetBackdrop({
+        bgFile = 'Interface\\Buttons\\WHITE8x8',
+        edgeFile="Interface\\Buttons\\WHITE8x8",
+        edgeSize = 1
+    })
+    frame.checkBox:SetBackdropColor(41/255, 43/255, 47/255, 1)
+    frame.checkBox:SetBackdropBorderColor(0, 0, 0, 1)
+    frame.checkBox:SetPoint('CENTER')
+    frame.checkBox:SetChecked(get())
 
-    frame.CheckBox:SetScript('OnEnter', function(self)
-        if frame.CheckBox:GetChecked() then
-            self.box:SetVertexColor(1, 1, 1, 1)
-            self.check:SetVertexColor(1, 1, 1, 1)
+    frame.checkBox.check = frame.checkBox:CreateTexture('PUSHED_TEXTURE_BOX', 'BACKGROUND')
+    frame.checkBox.check:SetSize(14, 14)
+    frame.checkBox.check:SetPoint('CENTER', frame.checkBox, 0, 0)
+    frame.checkBox.check:SetTexture('Interface\\Buttons\\WHITE8x8')
+    frame.checkBox.check:SetVertexColor(254/255, 231/255, 92/255, 255/255)
+    frame.checkBox:SetCheckedTexture(frame.checkBox.check)
+
+    frame.textBackdrop:SetScript('OnMouseDown', function()
+        if (enabled()) then
+            frame.checkBox:SetChecked(not frame.checkBox:GetChecked())
+            set(frame.checkBox:GetChecked())
+            update()
         end
     end)
 
-    frame.CheckBox:SetScript('OnLeave', function(self)
-        self.box:SetVertexColor(190/255, 190/255, 190/255, 255/255)
-        self.check:SetVertexColor(190/255, 190/255, 190/255, 255/255)
+    frame.checkBox:SetScript('OnClick', function()
+        if (enabled()) then
+            set(frame.checkBox:GetChecked())
+            update()
+        else
+            frame.checkBox:SetChecked(not frame.checkBox:GetChecked())
+        end
     end)
-
-    frame.GetChecked = function(self)
-        return self.CheckBox:GetChecked()
-    end
 
     return frame
 end
